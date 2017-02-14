@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="arr_country">
+        <item>KR</item>
+        <item>CN</item>
+        <item>JP</item>
+        <item>US</item>
+    </string-array>
+    <string-array name="arr_language">
+        <item>Korean</item>
+        <item>Chinese</item>
+        <item>Japanese</item>
+        <item>English</item>
+    </string-array>
+</resources>

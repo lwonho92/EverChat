@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "445281668651",
+    "firebase_url": "https://everchat-6ce20.firebaseio.com",
+    "project_id": "everchat-6ce20",
+    "storage_bucket": "everchat-6ce20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445281668651:android:3e08e7260cca039f",
+        "android_client_info": {
+          "package_name": "com.lwonho92.everchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "445281668651-76patqbb9m1edrlh4igr2modqo5mnpv0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcsPE3AfhJvc9G7RNfzksFkqWqA6y0yUM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "445281668651-76patqbb9m1edrlh4igr2modqo5mnpv0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
