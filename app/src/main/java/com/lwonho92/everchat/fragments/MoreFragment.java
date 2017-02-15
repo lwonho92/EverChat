@@ -12,14 +12,14 @@ import com.lwonho92.everchat.R;
  * Created by MY on 2017-02-14.
  */
 
-public class ThirdFragment extends Fragment {
-    public ThirdFragment() {}
+public class MoreFragment extends Fragment {
+    public MoreFragment() {}
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_third, container, false);
+        return inflater.inflate(R.layout.fragment_more, container, false);
     }
 }

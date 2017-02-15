@@ -17,7 +17,6 @@
         </activity>
         <activity android:name=".SignInActivity"/>
         <activity android:name=".ChatActivity"/>
-        <activity android:name=".RoomActivity"/>
         <activity android:name=".SettingsActivity">
         </activity>
     </application>

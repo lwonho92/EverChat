@@ -1,8 +1,6 @@
 package com.lwonho92.everchat;
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -31,11 +29,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lwonho92.everchat.datas.EverChatProfile;
-import com.lwonho92.everchat.fragments.FirstFragment;
-import com.lwonho92.everchat.fragments.SecondFragment;
-import com.lwonho92.everchat.fragments.ThirdFragment;
+import com.lwonho92.everchat.fragments.RoomFragment;
+import com.lwonho92.everchat.fragments.SearchFragment;
+import com.lwonho92.everchat.fragments.MoreFragment;
 
-public class MainActivity extends AppCompatActivity implements SecondFragment.OnArticleSelectedListener, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements SearchFragment.SelectCountryListener, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "MainActivity";
 
     private Toolbar toolbar;
@@ -100,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
         if(firebaseUser == null) {
 //            Fail get Current User
             startActivity(new Intent(this, SignInActivity.class));
-            return;
+            finish();
         } else {
             EverChatProfile everChatProfile = new EverChatProfile("KR", "Korean", "저는 한국인입니다.");
             final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/auth").child(firebaseUser.getUid());
@@ -132,9 +130,9 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new FirstFragment(), "First");
-        adapter.addFragment(new SecondFragment(), "Second");
-        adapter.addFragment(new ThirdFragment(), "Third");
+        adapter.addFragment(new RoomFragment(), "First");
+        adapter.addFragment(new SearchFragment(), "Second");
+        adapter.addFragment(new MoreFragment(), "Third");
         viewPager.setAdapter(adapter);
     }
 
@@ -169,9 +167,9 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
     }
 
     @Override
-    public void onArticleSelected(String str) {
-        FirstFragment firstFragment = (FirstFragment)adapter.getItem(0);
-        firstFragment.viewArticle(str);
+    public void setSelectedCountry(String str) {
+        RoomFragment roomFragment = (RoomFragment)adapter.getItem(0);
+        roomFragment.setCountry(str);
 
         viewPager.setCurrentItem(0);
     }
