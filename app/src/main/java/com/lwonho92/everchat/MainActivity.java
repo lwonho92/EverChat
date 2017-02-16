@@ -1,5 +1,6 @@
 package com.lwonho92.everchat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -53,12 +54,21 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
 
     public static ViewPagerAdapter adapter;
 
+    public ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        /*dialog = new ProgressDialog(this);
+        dialog.setMessage("message");
+        dialog.setCancelable(false);
+        dialog.setInverseBackgroundForced(false);
+        dialog.show();*/
+        ProgressDialog.show(this, "EverChat", "사용자 정보 로딩중입니다.", true, true);
+
+        toolbar = (Toolbar) findViewById(R.id.tb_main);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -176,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.chat, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 

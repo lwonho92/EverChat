@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.lwonho92.everchat.R;
@@ -84,6 +85,8 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
 
     public void setCountry(String str) {
         country = str;
+        if(roomFragmentTextView != null && country != null)
+            roomFragmentTextView.setText(country);
 
         if(firebaseRecyclerAdapter != null)
             firebaseRecyclerAdapter.cleanup();
@@ -117,6 +120,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
         switch(id) {
             case R.id.fab_button:
                 Toast.makeText(getContext(), "fab_button clicked", Toast.LENGTH_LONG).show();
+
                 break;
         }
     }

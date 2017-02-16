@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -28,7 +29,11 @@ import com.lwonho92.everchat.datas.EverChatMessage;
 
 public class ChatActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "ChatActivity";
+    public static final String COUNTRY_ID = "country_id";
+    public static final String ROOM_ID = "room_id";
     public static final String ANONYMOUS = "anonymous";
+
+    private Toolbar toolbar;
 
     private Button button;
     private EditText editText;
@@ -38,6 +43,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private String mUsername;
     private String mPhotoUrl;
+
+    private String room_id = "";
 
 //    Google instance variables
     private GoogleApiClient googleApiClient;
@@ -53,6 +60,16 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        toolbar = (Toolbar) findViewById(R.id.tb_chat);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+        if(intent != null) {
+            room_id = intent.getStringExtra(ROOM_ID);
+            setTitle(room_id);
+        }
 
         mUsername = ANONYMOUS;
 
@@ -74,7 +91,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
                 EverChatMessage.class,
                 R.layout.item_message,
                 ChatAdapter.ChatAdapterViewHolder.class,
-                databaseReference.child("messages"));
+                databaseReference.child("messages").child(room_id));
 
         firebaseRecyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -121,7 +138,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public void onClick(View view) {
                 EverChatMessage everChatMessage = new EverChatMessage(editText.getText().toString(), mUsername, mPhotoUrl);
-                databaseReference.child("messages").push().setValue(everChatMessage);
+                databaseReference.child("messages").child(room_id).push().setValue(everChatMessage);
 //                databaseReference.child("messages").child("-KcRmGlFO_P4LMuawcy6").setValue(everChatMessage);
                 editText.setText("");
             }
@@ -150,7 +167,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.chat, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 

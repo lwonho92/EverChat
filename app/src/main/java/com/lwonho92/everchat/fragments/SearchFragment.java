@@ -7,21 +7,25 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager;
 import com.lwonho92.everchat.R;
+import com.lwonho92.everchat.adapters.HorizontalPagerAdapter;
 
 /**
  * Created by MY on 2017-02-14.
  */
 
 public class SearchFragment extends Fragment {
-    private TextView textView;
-    private RadioButton krRadioButton, usRadioButton;
-    private Button summitButton;
+    private static final String TAG = "SearchFragment";
+    public static final String[] COUNTRY_INDEX = {"KR", "CN", "JP", "US"};
     SelectCountryListener mListener;
+
+    private HorizontalInfiniteCycleViewPager infiniteCycleViewPager;
 
     public SearchFragment() {}
 
@@ -48,22 +52,28 @@ public class SearchFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        textView = (TextView) getView().findViewById(R.id.profile_textview);
-        krRadioButton = (RadioButton) getView().findViewById(R.id.kr_radio_button);
-        usRadioButton = (RadioButton) getView().findViewById(R.id.us_radio_button);
-        summitButton = (Button) getView().findViewById(R.id.summit_button);
-        summitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String str = "";
-                if(krRadioButton.isChecked())
-                    str = krRadioButton.getText().toString();
-                else if(usRadioButton.isChecked())
-                    str = usRadioButton.getText().toString();
-                mListener.setSelectedCountry(str);
-            }
-        });
+//        ViewPagerAdapter
+        infiniteCycleViewPager = (HorizontalInfiniteCycleViewPager) getView().findViewById(R.id.hicvp);
+        infiniteCycleViewPager.setAdapter(new HorizontalPagerAdapter(getContext(), mListener));
+        infiniteCycleViewPager.setInterpolator(
+                AnimationUtils.loadInterpolator(getContext(), android.R.anim.overshoot_interpolator)
+        );
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        infiniteCycleViewPager.startAutoScroll(true);
+    }
+
+    @Override
+    public void onPause() {
+        infiniteCycleViewPager.stopAutoScroll();
+
+        super.onPause();
+    }
+
     public interface SelectCountryListener {
         public void setSelectedCountry(String str);
     }

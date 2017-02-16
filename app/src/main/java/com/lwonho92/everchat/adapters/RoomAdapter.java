@@ -1,6 +1,7 @@
 package com.lwonho92.everchat.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -8,7 +9,10 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.lwonho92.everchat.ChatActivity;
 import com.lwonho92.everchat.R;
 import com.lwonho92.everchat.datas.EverChatRoom;
 
@@ -45,11 +49,14 @@ public class RoomAdapter extends FirebaseRecyclerAdapter<EverChatRoom, RoomAdapt
 //            int adapterPosition = getAdapterPosition();
             int viewId = v.getId();
 
-//            switch(viewId) {
-//                case R.id.messengerImageView:
-                    Toast.makeText(mContext, id.toString(), Toast.LENGTH_LONG).show();
-//                    break;
-//            }
+            switch(viewId) {
+                default:
+                    Intent intent = new Intent(mContext, ChatActivity.class);
+                    intent.putExtra(ChatActivity.ROOM_ID, id);
+                    mContext.startActivity(intent);
+//                    Toast.makeText(mContext, id.toString(), Toast.LENGTH_LONG).show();
+                    break;
+            }
         }
     }
 
