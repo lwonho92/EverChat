@@ -12,6 +12,8 @@ import java.util.Map;
 
 @IgnoreExtraProperties
 public class EverChatProfile {
+    private String userName;
+    private String photoUrl;
     private String country;
     private String language;
     private String profile;
@@ -19,10 +21,28 @@ public class EverChatProfile {
     public EverChatProfile() {
 
     }
-    public EverChatProfile(String country, String language, String profile) {
+    public EverChatProfile(String userName, String photoUrl, String country, String language, String profile) {
+        this.userName = userName;
+        this.photoUrl = photoUrl;
         this.country = country;
         this.language = language;
         this.profile = profile;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public String getCountry() {
@@ -52,6 +72,8 @@ public class EverChatProfile {
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
+        result.put("name", userName);
+        result.put("photo", photoUrl);
         result.put("country", country);
         result.put("language", language);
         result.put("profile", profile);

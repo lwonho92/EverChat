@@ -110,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
             startActivity(new Intent(this, SignInActivity.class));
             finish();
         } else {
-            EverChatProfile everChatProfile = new EverChatProfile("KR", "Korean", "저는 한국인입니다.");
             final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/auth").child(firebaseUser.getUid());
 
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -121,6 +120,8 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
                         Toast.makeText(MainActivity.this, "exist", Toast.LENGTH_LONG).show();
                     } else {
 //                        non-exist
+                        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivity(intent);
                         Toast.makeText(MainActivity.this, "non-exist", Toast.LENGTH_LONG).show();
                     }
                 }

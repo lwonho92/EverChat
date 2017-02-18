@@ -71,7 +71,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
             setTitle(room_id);
         }
 
-        mUsername = ANONYMOUS;
+        mUsername = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        mPhotoUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
 
         button = (Button) findViewById(R.id.sendButton);
         editText = (EditText) findViewById(R.id.messageEditText);
@@ -114,7 +115,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(firebaseRecyclerAdapter);
 
-        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(30)});
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -139,31 +140,11 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
             public void onClick(View view) {
                 EverChatMessage everChatMessage = new EverChatMessage(editText.getText().toString(), mUsername, mPhotoUrl);
                 databaseReference.child("messages").child(room_id).push().setValue(everChatMessage);
-//                databaseReference.child("messages").child("-KcRmGlFO_P4LMuawcy6").setValue(everChatMessage);
+
                 editText.setText("");
             }
         });
     }
-
-    /*@Override
-    protected void onStart() {
-        super.onStart();
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        if(firebaseUser != null) {
-//            Success get Current User
-            mUsername = firebaseUser.getDisplayName();
-            if (firebaseUser.getPhotoUrl() != null) {
-                mPhotoUrl = firebaseUser.getPhotoUrl().toString();
-            }
-        } else {
-//            Fail get Current User
-            startActivity(new Intent(this, SignInActivity.class));
-            finish();
-            return;
-        }
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -6,10 +6,15 @@ package com.lwonho92.everchat.datas;
 
 public class EverChatRoom {
     private String id;
-    private String text;
     private String name;
+    private String text;
 
     public EverChatRoom() {}
+
+    public EverChatRoom(String name, String text) {
+        this.name = name;
+        this.text = text;
+    }
 
     public String getId() {
         return id;

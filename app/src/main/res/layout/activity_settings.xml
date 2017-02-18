@@ -22,14 +22,13 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/im_picture"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/im_settings"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_height="320dp"
         android:src="@drawable/ic_account_circle_black_36dp"
-        android:background="@color/colorPrimaryLight"
-        />
+        android:background="@color/colorPrimaryLight"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

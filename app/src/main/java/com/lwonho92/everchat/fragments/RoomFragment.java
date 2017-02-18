@@ -1,20 +1,28 @@
 package com.lwonho92.everchat.fragments;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.lwonho92.everchat.ChatActivity;
 import com.lwonho92.everchat.R;
 import com.lwonho92.everchat.adapters.RoomAdapter;
 import com.lwonho92.everchat.datas.EverChatRoom;
@@ -120,6 +128,40 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
         switch(id) {
             case R.id.fab_button:
                 Toast.makeText(getContext(), "fab_button clicked", Toast.LENGTH_LONG).show();
+                final EditText edittext = new EditText(getContext());
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                edittext.setLayoutParams(lp);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AppCompatAlertDialogStyle);
+                builder.setTitle("방 생성").setMessage("방 이름을 입력하세요.").setCancelable(true)
+                    .setView(edittext)
+                    .setPositiveButton("네", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+
+                            String key = databaseReference.child("room_names").child(country).push().getKey();
+                            databaseReference.child("room_names").child(country).child(key).setValue(new EverChatRoom(edittext.getText().toString(), ""));
+
+//                            Room_id / Room_name /
+//                            TODO databaseReference.child("room_names").
+
+                            Intent intent = new Intent(getContext(), ChatActivity.class);
+                            intent.putExtra(ChatActivity.ROOM_ID, key);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("아니오", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            dialog.cancel();
+                        }
+                    });
+                AppCompatDialog alert = builder.create();
+                alert.show();
 
                 break;
         }

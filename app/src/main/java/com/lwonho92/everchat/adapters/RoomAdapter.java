@@ -24,22 +24,24 @@ public class RoomAdapter extends FirebaseRecyclerAdapter<EverChatRoom, RoomAdapt
     public static Context mContext = null;
 
     public static class RoomAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView messageTextView;
+//        CircleImageView
         public TextView messengerTextView;
+        public TextView messageTextView;
+
         public String id;
 
         public RoomAdapterViewHolder(View itemView) {
             super(itemView);
 
-            messageTextView = (TextView) itemView.findViewById(R.id.last_messageTextView);
             messengerTextView = (TextView) itemView.findViewById(R.id.last_messengerTextView);
+            messageTextView = (TextView) itemView.findViewById(R.id.last_messageTextView);
 
             itemView.setOnClickListener(this);
         }
 
         public void bind(EverChatRoom everChatRoom) {
-            messageTextView.setText(everChatRoom.getText());
             messengerTextView.setText(everChatRoom.getName());
+            messageTextView.setText(everChatRoom.getText());
 
             id = everChatRoom.getId();
         }
