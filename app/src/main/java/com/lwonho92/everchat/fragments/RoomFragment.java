@@ -2,8 +2,9 @@ package com.lwonho92.everchat.fragments;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,24 +21,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.lwonho92.everchat.ChatActivity;
 import com.lwonho92.everchat.R;
 import com.lwonho92.everchat.adapters.RoomAdapter;
-import com.lwonho92.everchat.datas.EverChatRoom;
+import com.lwonho92.everchat.data.EverChatRoom;
 
 /**
  * Created by MY on 2017-02-14.
  */
 
-public class RoomFragment extends Fragment implements View.OnClickListener {
+public class RoomFragment extends Fragment implements View.OnClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "RoomFragment";
 
-    TextView roomFragmentTextView;
-    FloatingActionButton fabButton;
-    String country = "KR";
+    private TextView roomFragmentTextView;
+    private FloatingActionButton fabButton;
+    private String home;
+    private String currentCountry;
 
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
@@ -58,11 +60,15 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        home = pref.getString(getContext().getString(R.string.pref_country), getString(R.string.pref_default_country));
+        currentCountry = home;
+
         roomFragmentTextView = (TextView) getView().findViewById(R.id.tv_room_fragment);
         fabButton = (FloatingActionButton) getView().findViewById(R.id.fab_button);
         fabButton.setOnClickListener(this);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference("room_names");
 
         recyclerView = (RecyclerView) getView().findViewById(R.id.rv_room);
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -71,7 +77,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
                 EverChatRoom.class,
                 R.layout.item_room,
                 RoomAdapter.RoomAdapterViewHolder.class,
-                databaseReference.child("room_names").child(country));
+                databaseReference.child(currentCountry));
 
         firebaseRecyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -92,9 +98,9 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
     }
 
     public void setCountry(String str) {
-        country = str;
-        if(roomFragmentTextView != null && country != null)
-            roomFragmentTextView.setText(country);
+        currentCountry = str;
+        if(roomFragmentTextView != null && currentCountry != null)
+            roomFragmentTextView.setText(currentCountry);
 
         if(firebaseRecyclerAdapter != null)
             firebaseRecyclerAdapter.cleanup();
@@ -103,7 +109,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
                 EverChatRoom.class,
                 R.layout.item_room,
                 RoomAdapter.RoomAdapterViewHolder.class,
-                databaseReference.child("room_names").child(country));
+                databaseReference.child(currentCountry));
         firebaseRecyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -141,15 +147,13 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
                     {
                         public void onClick(DialogInterface dialog, int id)
                         {
-
-                            String key = databaseReference.child("room_names").child(country).push().getKey();
-                            databaseReference.child("room_names").child(country).child(key).setValue(new EverChatRoom(edittext.getText().toString(), ""));
-
-//                            Room_id / Room_name /
-//                            TODO databaseReference.child("room_names").
+                            String roomId = databaseReference.child(currentCountry).push().getKey();
+                            String roomName = edittext.getText().toString();
+                            databaseReference.child(currentCountry).child(roomId).setValue(new EverChatRoom(roomName, ""));
 
                             Intent intent = new Intent(getContext(), ChatActivity.class);
-                            intent.putExtra(ChatActivity.ROOM_ID, key);
+                            intent.putExtra(getString(R.string.room_id), roomId);
+                            intent.putExtra(getString(R.string.room_name), roomName);
                             startActivity(intent);
                         }
                     })
@@ -165,5 +169,13 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
 
                 break;
         }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key == getString(R.string.pref_country)) {
+            home = sharedPreferences.getString(key, getString(R.string.pref_default_country));
+        }
+        Log.e(TAG, "Change: " + key);
     }
 }

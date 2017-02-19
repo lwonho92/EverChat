@@ -1,6 +1,8 @@
 package com.lwonho92.everchat;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,16 +24,19 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.lwonho92.everchat.adapters.ChatAdapter;
-import com.lwonho92.everchat.datas.EverChatMessage;
+import com.lwonho92.everchat.data.EverChatMessage;
 
-public class ChatActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class ChatActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "ChatActivity";
     public static final String COUNTRY_ID = "country_id";
     public static final String ROOM_ID = "room_id";
-    public static final String ANONYMOUS = "anonymous";
+    private static final String ANONYMOUS = "anonymous";
 
     private Toolbar toolbar;
 
@@ -44,7 +49,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
     private String mUsername;
     private String mPhotoUrl;
 
-    private String room_id = "";
+    private String roomId = "";
+    private String roomName = "";
+    private String prefLanguage = "";
 
 //    Google instance variables
     private GoogleApiClient googleApiClient;
@@ -67,9 +74,11 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
 
         Intent intent = getIntent();
         if(intent != null) {
-            room_id = intent.getStringExtra(ROOM_ID);
-            setTitle(room_id);
+            roomId = intent.getStringExtra(getString(R.string.room_id));
+            roomName = intent.getStringExtra(getString(R.string.room_name));
+            setTitle(roomName);
         }
+        prefLanguage = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_language), getString(R.string.pref_default_language));
 
         mUsername = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         mPhotoUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
@@ -86,13 +95,13 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference("messages");
 
         firebaseRecyclerAdapter = new ChatAdapter(this,
                 EverChatMessage.class,
                 R.layout.item_message,
                 ChatAdapter.ChatAdapterViewHolder.class,
-                databaseReference.child("messages").child(room_id));
+                databaseReference.child(roomId));
 
         firebaseRecyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -138,9 +147,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EverChatMessage everChatMessage = new EverChatMessage(editText.getText().toString(), mUsername, mPhotoUrl);
-                databaseReference.child("messages").child(room_id).push().setValue(everChatMessage);
-
+                EverChatMessage everChatMessage = new EverChatMessage(mUsername, mPhotoUrl, editText.getText().toString(), prefLanguage);
+                databaseReference.child(roomId).push().setValue(everChatMessage);
                 editText.setText("");
             }
         });
@@ -171,5 +179,13 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "Called onConnectionFailed:" + connectionResult);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key == getString(R.string.pref_language)) {
+            prefLanguage = sharedPreferences.getString(key, getString(R.string.pref_default_language));
+        }
+        Log.e(TAG, "Change: " + key);
     }
 }

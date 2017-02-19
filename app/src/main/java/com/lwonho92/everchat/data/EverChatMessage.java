@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lwonho92.everchat.datas;
+package com.lwonho92.everchat.data;
 
 import com.google.firebase.database.Exclude;
 
@@ -23,17 +23,19 @@ import java.util.Map;
 public class EverChatMessage {
 
     private String id;
-    private String text;
     private String name;
     private String photoUrl;
+    private String message;
+    private String language;
 
     public EverChatMessage() {
     }
 
-    public EverChatMessage(String text, String name, String photoUrl) {
-        this.text = text;
+    public EverChatMessage(String name, String photoUrl, String message, String language) {
         this.name = name;
         this.photoUrl = photoUrl;
+        this.message = message;
+        this.language = language;
     }
 
     public void setId(String id) {
@@ -41,13 +43,6 @@ public class EverChatMessage {
     }
     public String getId() {
         return id;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-    public String getText() {
-        return text;
     }
 
     public void setName(String name) {
@@ -64,13 +59,26 @@ public class EverChatMessage {
         return photoUrl;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    public String getMessage() {
+        return message;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+    public String getLanguage() { return language; }
+
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("id", id);
-        result.put("text", text);
         result.put("name", name);
         result.put("photoUrl", photoUrl);
+        result.put("message", message);
+        result.put("language", language);
 
         return result;
     }

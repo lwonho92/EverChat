@@ -1,8 +1,9 @@
 package com.lwonho92.everchat;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -29,7 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lwonho92.everchat.datas.EverChatProfile;
+import com.lwonho92.everchat.data.EverChatProfile;
 import com.lwonho92.everchat.fragments.RoomFragment;
 import com.lwonho92.everchat.fragments.SearchFragment;
 import com.lwonho92.everchat.fragments.MoreFragment;
@@ -40,64 +41,37 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private int[] tabIcons = {
-            R.drawable.ic_question_answer_white_48dp,
-            R.drawable.ic_public_white_48dp,
-            R.drawable.ic_widgets_white_48dp
-    };
 
     private GoogleApiClient googleApiClient;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    private DatabaseReference databaseReference;
 
     public static ViewPagerAdapter adapter;
 
-    public ProgressDialog dialog;
+//    public ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*dialog = new ProgressDialog(this);
-        dialog.setMessage("message");
-        dialog.setCancelable(false);
-        dialog.setInverseBackgroundForced(false);
-        dialog.show();*/
-        ProgressDialog.show(this, "EverChat", "사용자 정보 로딩중입니다.", true, true);
+//        ProgressDialog.show(this, "EverChat", "사용자 정보 로딩중입니다.", true, true);
 
         toolbar = (Toolbar) findViewById(R.id.tb_main);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-        setupTabIcons();
-
-        /*databaseReference = FirebaseDatabase.getInstance().getReference("/auth/Kk2qi1Jv0bRU8kUumW9LyBEPDEm2/");
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                EverChatProfile everChatProfile = dataSnapshot.getValue(EverChatProfile.class);
-                textView.setText(everChatProfile.getProfile());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-        databaseReference.addValueEventListener(valueEventListener);*/
-
         googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
+
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+        setupTabIcons();
     }
 
     @Override
@@ -117,9 +91,17 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()) {
 //                        exist
-                        Toast.makeText(MainActivity.this, "exist", Toast.LENGTH_LONG).show();
+                        EverChatProfile everChatProfile = dataSnapshot.getValue(EverChatProfile.class);
+
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString(getString(R.string.pref_country), everChatProfile.getCountry());
+                        editor.putString(getString(R.string.pref_language), everChatProfile.getLanguage());
+                        editor.commit();
+
+                        setSelectedCountry(everChatProfile.getCountry());
                     } else {
-//                        non-exist
+//                        non - exist
                         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                         startActivity(intent);
                         Toast.makeText(MainActivity.this, "non-exist", Toast.LENGTH_LONG).show();
@@ -133,20 +115,21 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
         }
     }
 
-    private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-    }
-
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new RoomFragment(), "First");
-        adapter.addFragment(new SearchFragment(), "Second");
-        adapter.addFragment(new MoreFragment(), "Third");
+        adapter.addFragment(new RoomFragment());
+        adapter.addFragment(new SearchFragment());
+        adapter.addFragment(new MoreFragment());
         viewPager.setAdapter(adapter);
     }
 
+    private void setupTabIcons() {
+        int[] tabIcons = {R.drawable.ic_question_answer_white_48dp, R.drawable.ic_public_white_48dp, R.drawable.ic_widgets_white_48dp};
+
+        for(int i = 0; i < tabIcons.length; i++) {
+            tabLayout.getTabAt(i).setIcon(tabIcons[i]);
+        }
+    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -165,6 +148,10 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
             return mFragmentList.size();
         }
 
+        public void addFragment(Fragment fragment) {
+            mFragmentList.add(fragment);
+        }
+
         public void addFragment(Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
@@ -172,8 +159,10 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
 
         @Override
         public CharSequence getPageTitle(int position) {
-//            return mFragmentTitleList.get(position);
-            return null;
+            if(!mFragmentTitleList.isEmpty())
+                return mFragmentTitleList.get(position);
+            else
+                return null;
         }
     }
 
@@ -208,6 +197,6 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "Called onConnectionFailed:" + connectionResult);
+        Log.d(TAG, getString(R.string.googleapi_connection_failed) + connectionResult);
     }
 }

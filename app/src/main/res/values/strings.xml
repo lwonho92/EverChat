@@ -5,4 +5,20 @@
     <string name="room">Country</string>
     <string name="search">Select Country</string>
     <string name="more">More</string>
+
+    <string name="pref">settings</string>
+    <string name="pref_country">country</string>
+    <string name="pref_language">language</string>
+
+    <string name="pref_default_country">kr</string>
+    <string name="pref_default_language">ko</string>
+
+    <string name="room_id">room_id</string>
+    <string name="room_name">room_name</string>
+
+    <string name="naver_api_url">https://openapi.naver.com/v1/language/translate</string>
+    <string name="naver_client_id">X-Naver-Client-Id</string>
+    <string name="naver_client_secret">X-Naver-Client-Secret</string>
+
+    <string name="googleapi_connection_failed">Called onConnectionFailed: </string>
 </resources>

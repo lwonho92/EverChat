@@ -1,4 +1,4 @@
-package com.lwonho92.everchat.datas;
+package com.lwonho92.everchat.data;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;

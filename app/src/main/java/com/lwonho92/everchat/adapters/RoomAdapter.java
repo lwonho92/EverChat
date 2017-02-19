@@ -5,16 +5,13 @@ import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.lwonho92.everchat.ChatActivity;
 import com.lwonho92.everchat.R;
-import com.lwonho92.everchat.datas.EverChatRoom;
+import com.lwonho92.everchat.data.EverChatRoom;
 
 /**
  * Created by MY on 2017-02-08.

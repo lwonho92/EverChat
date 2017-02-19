@@ -22,7 +22,6 @@ import com.lwonho92.everchat.adapters.HorizontalPagerAdapter;
 
 public class SearchFragment extends Fragment {
     private static final String TAG = "SearchFragment";
-    public static final String[] COUNTRY_INDEX = {"KR", "CN", "JP", "US"};
     SelectCountryListener mListener;
 
     private HorizontalInfiniteCycleViewPager infiniteCycleViewPager;

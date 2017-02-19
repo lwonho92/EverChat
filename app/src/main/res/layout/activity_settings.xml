@@ -45,7 +45,8 @@
                 android:id="@+id/sp_country"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:entries="@array/arr_country"/>
+                android:entries="@array/short_countries"
+                />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -54,7 +55,7 @@
                 android:id="@+id/sp_language"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:entries="@array/arr_language"/>
+                android:entries="@array/short_languages"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

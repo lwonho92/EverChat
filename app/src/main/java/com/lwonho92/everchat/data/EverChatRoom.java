@@ -1,4 +1,4 @@
-package com.lwonho92.everchat.datas;
+package com.lwonho92.everchat.data;
 
 /**
  * Created by MY on 2017-02-10.
