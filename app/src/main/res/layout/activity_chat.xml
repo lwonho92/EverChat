@@ -44,14 +44,14 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"/>
 
-        <ImageButton
+        <Button
+            android:id="@+id/translate_button"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:background="#FFFFFF"
-            android:src="@drawable/ic_g_translate_black_48dp"/>
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_g_translate_black_48dp"/>
 
         <Button
-            android:id="@+id/sendButton"
+            android:id="@+id/send_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"

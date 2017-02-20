@@ -2,23 +2,40 @@
     <string name="app_name">EverChat</string>
     <string name="title_activity_settings">Settings</string>
 
+    <!--Each tabs name-->
     <string name="room">Country</string>
     <string name="search">Select Country</string>
     <string name="more">More</string>
 
+    <!--SharedPreference keys and default values-->
     <string name="pref">settings</string>
     <string name="pref_country">country</string>
     <string name="pref_language">language</string>
+    <string name="pref_translate">translate</string>
 
     <string name="pref_default_country">kr</string>
     <string name="pref_default_language">ko</string>
 
+    <!--Use intent key in ChatActivity-->
     <string name="room_id">room_id</string>
     <string name="room_name">room_name</string>
 
+    <!--Naver api url and keys-->
     <string name="naver_api_url">https://openapi.naver.com/v1/language/translate</string>
     <string name="naver_client_id">X-Naver-Client-Id</string>
     <string name="naver_client_secret">X-Naver-Client-Secret</string>
 
+    <!--fab label-->
+    <string name="fab_homeland_label">Go Homeland</string>
+    <string name="fab_create_room_label">Create New Room</string>
+
+    <!--Create room Alert Dialog text-->
+    <string name="alert_dialog_title">Create Room</string>
+    <string name="alert_dialog_message">Insert room name</string>
+
+    <string name="alert_dialog_positive">OK</string>
+    <string name="alert_dialog_negative">Cancel</string>
+
+    <!--Google api service message-->
     <string name="googleapi_connection_failed">Called onConnectionFailed: </string>
 </resources>

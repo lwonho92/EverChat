@@ -25,44 +25,45 @@
             android:layout_height="match_parent"
             />
     </LinearLayout>
-    <android.support.design.widget.FloatingActionButton
+    <!--<android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_input_add"
-        android:tint="@android:color/white" />
+        android:tint="@android:color/white" />-->
 
-    <!--<com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/right_labels"
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/fam_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_gravity="bottom|end"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        fab:fab_addButtonColorNormal="@color/white"
-        fab:fab_addButtonColorPressed="@color/white_pressed"
-        fab:fab_addButtonPlusIconColor="@color/half_black"
-        fab:fab_addButtonSize="mini"
+        fab:fab_addButtonColorNormal="@color/colorPrimaryLight"
+        fab:fab_addButtonColorPressed="@color/colorPrimary"
+        fab:fab_addButtonPlusIconColor="@color/white"
         fab:fab_labelStyle="@style/menu_labels_style"
-        fab:fab_labelsPosition="right">
+        fab:fab_labelsPosition="left">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_homeland"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/white"
-            fab:fab_title="Label on the right"
+            fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_title="@string/fab_homeland_label"
+            fab:fab_icon="@drawable/ic_home_white_48dp"
             fab:fab_colorPressed="@color/white_pressed"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_create_room"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/white"
-            fab:fab_size="mini"
-            fab:fab_title="Another one on the right"
+            fab:fab_colorNormal="@color/colorPink"
+            fab:fab_title="@string/fab_create_room_label"
+            fab:fab_icon="@drawable/ic_note_add_white_48dp"
             fab:fab_colorPressed="@color/white_pressed"/>
 
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>-->
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </FrameLayout>

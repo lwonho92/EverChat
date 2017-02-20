@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString(getString(R.string.pref_country), everChatProfile.getCountry());
                         editor.putString(getString(R.string.pref_language), everChatProfile.getLanguage());
+                        editor.putBoolean(getString(R.string.pref_translate), getResources().getBoolean(R.bool.pref_default_translate));
                         editor.commit();
 
                         setSelectedCountry(everChatProfile.getCountry());

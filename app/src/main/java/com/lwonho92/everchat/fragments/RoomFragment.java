@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
@@ -19,8 +18,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.lwonho92.everchat.ChatActivity;
@@ -36,7 +36,8 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
     private static final String TAG = "RoomFragment";
 
     private TextView roomFragmentTextView;
-    private FloatingActionButton fabButton;
+    private FloatingActionsMenu famButton;
+    private FloatingActionButton fabHomeland, fabCreateRoom;
     private String home;
     private String currentCountry;
 
@@ -50,6 +51,9 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        home = pref.getString(getContext().getString(R.string.pref_country), getString(R.string.pref_default_country));
+        currentCountry = home;
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,13 +64,13 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        home = pref.getString(getContext().getString(R.string.pref_country), getString(R.string.pref_default_country));
-        currentCountry = home;
-
         roomFragmentTextView = (TextView) getView().findViewById(R.id.tv_room_fragment);
-        fabButton = (FloatingActionButton) getView().findViewById(R.id.fab_button);
-        fabButton.setOnClickListener(this);
+
+        famButton = (FloatingActionsMenu) getView().findViewById(R.id.fam_button);
+        fabHomeland = (FloatingActionButton) getView().findViewById(R.id.fab_homeland);
+        fabCreateRoom = (FloatingActionButton) getView().findViewById(R.id.fab_create_room);
+        fabHomeland.setOnClickListener(this);
+        fabCreateRoom.setOnClickListener(this);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("room_names");
 
@@ -130,25 +134,25 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
     @Override
     public void onClick(View v) {
         int id = v.getId();
-
+        famButton.collapse();
         switch(id) {
-            case R.id.fab_button:
-                Toast.makeText(getContext(), "fab_button clicked", Toast.LENGTH_LONG).show();
-                final EditText edittext = new EditText(getContext());
+            case R.id.fab_create_room:
+//                Toast.makeText(getContext(), "fab_create_room clicked", Toast.LENGTH_LONG).show();
+                final EditText roomNameEditText = new EditText(getContext());
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT);
-                edittext.setLayoutParams(lp);
+                roomNameEditText.setLayoutParams(lp);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AppCompatAlertDialogStyle);
-                builder.setTitle("방 생성").setMessage("방 이름을 입력하세요.").setCancelable(true)
-                    .setView(edittext)
-                    .setPositiveButton("네", new DialogInterface.OnClickListener()
+                builder.setTitle(getString(R.string.alert_dialog_title)).setMessage(R.string.alert_dialog_message).setCancelable(true)
+                    .setView(roomNameEditText)
+                    .setPositiveButton(getString(R.string.alert_dialog_positive), new DialogInterface.OnClickListener()
                     {
                         public void onClick(DialogInterface dialog, int id)
                         {
                             String roomId = databaseReference.child(currentCountry).push().getKey();
-                            String roomName = edittext.getText().toString();
+                            String roomName = roomNameEditText.getText().toString();
                             databaseReference.child(currentCountry).child(roomId).setValue(new EverChatRoom(roomName, ""));
 
                             Intent intent = new Intent(getContext(), ChatActivity.class);
@@ -157,7 +161,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
                             startActivity(intent);
                         }
                     })
-                    .setNegativeButton("아니오", new DialogInterface.OnClickListener()
+                    .setNegativeButton(getString(R.string.alert_dialog_negative), new DialogInterface.OnClickListener()
                     {
                         public void onClick(DialogInterface dialog, int id)
                         {
@@ -167,6 +171,9 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
                 AppCompatDialog alert = builder.create();
                 alert.show();
 
+                break;
+            case R.id.fab_homeland:
+                setCountry(home);
                 break;
         }
     }

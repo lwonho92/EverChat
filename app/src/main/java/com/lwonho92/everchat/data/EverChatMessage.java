@@ -16,26 +16,29 @@
 package com.lwonho92.everchat.data;
 
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.ServerValue;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class EverChatMessage {
-
     private String id;
     private String name;
     private String photoUrl;
     private String message;
     private String language;
+    private String uid;
+    Long timestamp;
 
     public EverChatMessage() {
     }
 
-    public EverChatMessage(String name, String photoUrl, String message, String language) {
+    public EverChatMessage(String name, String photoUrl, String message, String language, String uid) {
         this.name = name;
         this.photoUrl = photoUrl;
         this.message = message;
         this.language = language;
+        this.uid = uid;
     }
 
     public void setId(String id) {
@@ -71,6 +74,20 @@ public class EverChatMessage {
     }
     public String getLanguage() { return language; }
 
+    public String getUid() {
+        return uid;
+    }
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public java.util.Map<String, String> getTimestamp() {
+        return ServerValue.TIMESTAMP;
+    }
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
+
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -79,7 +96,12 @@ public class EverChatMessage {
         result.put("photoUrl", photoUrl);
         result.put("message", message);
         result.put("language", language);
+        result.put("uid", uid);
 
         return result;
+    }
+
+    public Long getTimestampLong() {
+        return timestamp;
     }
 }

@@ -24,15 +24,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.lwonho92.everchat.adapters.ChatAdapter;
 import com.lwonho92.everchat.data.EverChatMessage;
 
-public class ChatActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public class ChatActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener {
     private static final String TAG = "ChatActivity";
     public static final String COUNTRY_ID = "country_id";
     public static final String ROOM_ID = "room_id";
@@ -40,7 +37,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private Toolbar toolbar;
 
-    private Button button;
+    private Button sendButton, translateButton;
     private EditText editText;
 
     private RecyclerView recyclerView;
@@ -83,7 +80,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
         mUsername = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         mPhotoUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
 
-        button = (Button) findViewById(R.id.sendButton);
+        translateButton = (Button) findViewById(R.id.translate_button);
+        sendButton = (Button) findViewById(R.id.send_button);
         editText = (EditText) findViewById(R.id.messageEditText);
 
         recyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView);
@@ -133,9 +131,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence.toString().trim().length() > 0) {
-                    button.setEnabled(true);
+                    sendButton.setEnabled(true);
                 } else {
-                    button.setEnabled(false);
+                    sendButton.setEnabled(false);
                 }
             }
 
@@ -144,14 +142,14 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EverChatMessage everChatMessage = new EverChatMessage(mUsername, mPhotoUrl, editText.getText().toString(), prefLanguage);
-                databaseReference.child(roomId).push().setValue(everChatMessage);
-                editText.setText("");
-            }
-        });
+        translateButton.setOnClickListener(this);
+        boolean isOnTranslate = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_translate), getResources().getBoolean(R.bool.pref_default_translate));
+        if(isOnTranslate) {
+            visiableTranslation();
+        } else {
+            invisiableTranslation();
+        }
+        sendButton.setOnClickListener(this);
     }
 
     @Override
@@ -186,6 +184,42 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
         if(key == getString(R.string.pref_language)) {
             prefLanguage = sharedPreferences.getString(key, getString(R.string.pref_default_language));
         }
-        Log.e(TAG, "Change: " + key);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int selectedId = v.getId();
+
+        switch(selectedId) {
+            case R.id.translate_button:
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = pref.edit();
+
+                boolean isOnTranslate = pref.getBoolean(getString(R.string.pref_translate), getResources().getBoolean(R.bool.pref_default_translate));
+                if(isOnTranslate) {
+                    invisiableTranslation();
+                } else {
+                    visiableTranslation();
+                }
+                editor.putBoolean(getString(R.string.pref_translate), !isOnTranslate);
+                editor.commit();
+
+                firebaseRecyclerAdapter.notifyDataSetChanged();
+//                recyclerView.swapAdapter(firebaseRecyclerAdapter, true);
+
+                break;
+            case R.id.send_button:
+                EverChatMessage everChatMessage = new EverChatMessage(mUsername, mPhotoUrl, editText.getText().toString(), prefLanguage, FirebaseAuth.getInstance().getCurrentUser().getUid());
+                databaseReference.child(roomId).push().setValue(everChatMessage);
+                editText.setText("");
+                break;
+        }
+    }
+
+    private void visiableTranslation() {
+        translateButton.setAlpha(1.0F);
+    }
+    private void invisiableTranslation() {
+        translateButton.setAlpha(0.5F);
     }
 }

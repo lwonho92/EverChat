@@ -25,7 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lwonho92.everchat.data.EverChatProfile;
-import com.lwonho92.everchat.fragments.SearchFragment;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

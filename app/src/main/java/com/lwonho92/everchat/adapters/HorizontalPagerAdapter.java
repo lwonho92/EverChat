@@ -1,9 +1,7 @@
 package com.lwonho92.everchat.adapters;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,6 @@ import com.lwonho92.everchat.fragments.SearchFragment;
  * Created by GIGAMOLE on 7/27/16.
  */
 public class HorizontalPagerAdapter extends PagerAdapter {
-    String TAG = "HorizontalPagerAdapter";
     private Context mContext;
     private LayoutInflater mLayoutInflater;
     private SearchFragment.SelectCountryListener mListener;
@@ -26,13 +23,12 @@ public class HorizontalPagerAdapter extends PagerAdapter {
     private final int[] drawableCountry = {R.drawable.kr, R.drawable.cn, R.drawable.jp, R.drawable.us};
     private final String[] fullCountry;
     private final String[] country;
-    private TypedArray flags;
 
     public HorizontalPagerAdapter(final Context context, SearchFragment.SelectCountryListener listener) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
         mListener = listener;
-        TypedArray flags = mContext.getResources().obtainTypedArray(R.array.drawable_countries);
+//        TypedArray flags = mContext.getResources().obtainTypedArray(R.array.drawable_countries);
 //        drawableCountry = flags.get;
 //        Log.e(TAG, drawableCountry.toString());
         fullCountry = mContext.getResources().getStringArray(R.array.full_countries);

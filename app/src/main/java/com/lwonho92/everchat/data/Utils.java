@@ -1,16 +1,33 @@
 package com.lwonho92.everchat.data;
 
+import java.util.Calendar;
+
 /**
  * Created by GIGAMOLE on 8/18/16.
  */
 public class Utils {
-    /*private static final String country;
-    private final String[] fullCountry;
-    private final String[] language;
-    private final int[] drawableCountry;
-    static {
-        country = "HI";
-    }
+    /*public static int getGmtMinutesOffset() {
+        Calendar mCalendar = new GregorianCalendar();
+        TimeZone mTimeZone = mCalendar.getTimeZone();
+        int mGMTOffset = mTimeZone.getRawOffset();
 
-    public static int transFullCountryToIndex()*/
+        return (int)(TimeUnit.MINUTES.convert(mGMTOffset, TimeUnit.MILLISECONDS));
+    }*/
+
+    public static String getMillisToStr(Long millis) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(millis);
+//        cal.add(Calendar.MINUTE, getGmtMinutesOffset());
+
+        String ampm = "";
+        switch(cal.get(Calendar.AM_PM)) {
+            case Calendar.AM:
+                ampm = "AM";
+                break;
+            case Calendar.PM:
+                ampm = "PM";
+                break;
+        }
+        return String.format("%s %d : %02d", ampm, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
+    }
 }

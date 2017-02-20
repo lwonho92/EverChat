@@ -11,7 +11,7 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/messengerImageView"
+            android:id="@+id/im_messenger"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/cn"/>

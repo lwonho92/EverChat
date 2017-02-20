@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
 import com.lwonho92.everchat.ChatActivity;
@@ -18,12 +19,12 @@ import com.lwonho92.everchat.data.EverChatRoom;
  */
 
 public class RoomAdapter extends FirebaseRecyclerAdapter<EverChatRoom, RoomAdapter.RoomAdapterViewHolder> {
-    public static Context mContext = null;
+    private static Context mContext = null;
 
     public static class RoomAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 //        CircleImageView
-        public TextView messengerTextView;
-        public TextView messageTextView;
+        private TextView messengerTextView;
+        private TextView messageTextView;
 
         public String id;
 
