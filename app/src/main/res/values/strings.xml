@@ -2,7 +2,7 @@
     <string name="app_name">EverChat</string>
     <string name="title_activity_settings">Settings</string>
 
-    <string name="progress_message">Loading User\'s info</string>
+    <string name="progress_message">Load User\'s info</string>
 
     <!--Each tabs name-->
     <string name="room">Country</string>
@@ -18,10 +18,15 @@
     <string name="pref_default_country">kr</string>
     <string name="pref_default_language">ko</string>
 
-    <!--Use intent key in ProfileActivity-->
-    <string name="selected_user_id">selected_user_id</string>
+    <!--Using intent keys in ProfileActivity-->
+    <string name="profile_selected_uid">selected_user_id</string>
 
-    <!--Use intent key in ChatActivity-->
+    <string name="profile_country">Country</string>
+    <string name="profile_language">Language</string>
+    <string name="profile_info">Info</string>
+    <string name="profile_stars">Stars</string>
+
+    <!--Using intent keys and labels in ChatActivity-->
     <string name="room_id">room_id</string>
     <string name="room_name">room_name</string>
 
@@ -41,10 +46,11 @@
     <string name="alert_dialog_positive">OK</string>
     <string name="alert_dialog_negative">Cancel</string>
 
-    <!--Start Toast messages-->
-    <string name="toast_star_positive">Send star</string>
-    <string name="toast_star_negative"></string>
-
-    <!--Google api service message-->
+    <!--Google api service messages-->
     <string name="googleapi_connection_failed">Called onConnectionFailed: </string>
+
+    <!--firebase messages-->
+    <string name="firebase_single_value_error">Firebase single value event error</string>
+    <string name="firebase_iterate_value_error">Firebase iterate value event error</string>
+    <string name="firebase_transaction_error">Firebase post transaction error</string>
 </resources>

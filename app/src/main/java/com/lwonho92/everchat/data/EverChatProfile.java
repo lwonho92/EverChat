@@ -17,18 +17,19 @@ public class EverChatProfile {
     private String country;
 
     private String language;
-    private String profile;
-    private HashMap<String, Boolean> stars = new HashMap<>();
+    private String info;
+    private HashMap<String, Boolean> stars;
 
     public EverChatProfile() {
 
     }
-    public EverChatProfile(String userName, String photoUrl, String country, String language, String profile) {
+    public EverChatProfile(String userName, String photoUrl, String country, String language, String info, HashMap<String, Boolean> stars) {
         this.userName = userName;
         this.photoUrl = photoUrl;
         this.country = country;
         this.language = language;
-        this.profile = profile;
+        this.info = info;
+        this.stars = stars;
     }
 
     public String getUserName() {
@@ -63,21 +64,23 @@ public class EverChatProfile {
         this.language = language;
     }
 
-    public String getProfile() {
-        return profile;
+    public String getInfo() {
+        return info;
     }
 
-    public void setProfile(String profile) {
-        this.profile = profile;
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public HashMap<String, Boolean> getStars() {
+        if(stars == null)
+            stars = new HashMap<String, Boolean>();
         return stars;
     }
 
-    public void setStars() {
+    /*public void setStars() {
         this.stars = new HashMap<>();
-    }
+    }*/
     public void setStars(HashMap<String, Boolean> stars) {
         this.stars = stars;
     }
@@ -89,13 +92,14 @@ public class EverChatProfile {
         result.put("photo", photoUrl);
         result.put("country", country);
         result.put("language", language);
-        result.put("profile", profile);
-        return result;
-    }
-
-    public Map<String, Object> toStarsMap() {
-        HashMap<String, Object> result = new HashMap<>();
+        result.put("info", info);
         result.put("stars", stars);
         return result;
     }
+
+    /*public Map<String, Object> toStarsMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("stars", stars);
+        return result;
+    }*/
 }

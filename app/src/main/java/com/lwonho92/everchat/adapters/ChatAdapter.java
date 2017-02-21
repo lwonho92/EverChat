@@ -1,46 +1,28 @@
 package com.lwonho92.everchat.adapters;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.Transaction;
-import com.google.firebase.database.ValueEventListener;
-import com.lwonho92.everchat.ChatActivity;
 import com.lwonho92.everchat.ProfileActivity;
 import com.lwonho92.everchat.data.EverChatMessage;
 import com.lwonho92.everchat.R;
-import com.lwonho92.everchat.data.EverChatProfile;
-import com.lwonho92.everchat.data.EverChatRoom;
 import com.lwonho92.everchat.data.Utils;
 
 import org.json.JSONObject;
@@ -193,7 +175,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
             switch(viewId) {
                 case R.id.im_messenger:
                     Intent intent = new Intent(mContext, ProfileActivity.class);
-                    intent.putExtra(mContext.getString(R.string.selected_user_id), uid);
+                    intent.putExtra(mContext.getString(R.string.profile_selected_uid), uid);
                     mContext.startActivity(intent);
                     /*final Button button = new Button(mContext);
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(

@@ -58,7 +58,7 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
         pictureImageView = (CircleImageView) findViewById(R.id.im_settings);
         countrySpinner = (Spinner) findViewById(R.id.sp_country);
         languageSpinner = (Spinner) findViewById(R.id.sp_language);
-        profileEditText = (EditText) findViewById(R.id.et_intro);
+        profileEditText = (EditText) findViewById(R.id.et_info);
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -92,7 +92,7 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
                             break;
                         }
                     }
-                    profileEditText.setText(everChatProfile.getProfile());
+                    profileEditText.setText(everChatProfile.getInfo());
                 } else {
                     everChatProfile = new EverChatProfile();
                     countrySpinner.setEnabled(true);
@@ -123,7 +123,7 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
                 everChatProfile.setPhotoUrl(firebaseUser.getPhotoUrl().toString());
                 everChatProfile.setCountry(countrySpinner.getSelectedItem().toString());
                 everChatProfile.setLanguage(languageSpinner.getSelectedItem().toString());
-                everChatProfile.setProfile(profileEditText.getText().toString());
+                everChatProfile.setInfo(profileEditText.getText().toString());
                 ref.setValue(everChatProfile);
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
