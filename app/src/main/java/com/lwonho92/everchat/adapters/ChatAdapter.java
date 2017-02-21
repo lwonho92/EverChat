@@ -1,15 +1,22 @@
 package com.lwonho92.everchat.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,9 +25,18 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
+import com.lwonho92.everchat.ChatActivity;
 import com.lwonho92.everchat.data.EverChatMessage;
 import com.lwonho92.everchat.R;
+import com.lwonho92.everchat.data.EverChatProfile;
+import com.lwonho92.everchat.data.EverChatRoom;
 import com.lwonho92.everchat.data.Utils;
 
 import org.json.JSONObject;
@@ -53,6 +69,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
         public TextView messengerTextView;
         public TextView messageTextView;
         public TextView timestampTextView;
+        public String uid;
 
         public ChatAdapterViewHolder(View itemView) {
             super(itemView);
@@ -63,19 +80,22 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
             messageTextView = (TextView) itemView.findViewById(R.id.tv_message);
             timestampTextView = (TextView) itemView.findViewById(R.id.tv_timestamp);
 
-            itemView.setOnClickListener(this);
+            messengerImageView.setOnClickListener(this);
         }
 
         public void bind(final EverChatMessage everChatMessage, int type) {
             timestampTextView.setText(Utils.getMillisToStr(everChatMessage.getTimestampLong()));
+            uid = everChatMessage.getUid();
+            GradientDrawable drawable = (GradientDrawable) messageTextView.getBackground();
             if(type == 0) {
                 linearLayout.setGravity(Gravity.END);
                 messengerImageView.setVisibility(View.INVISIBLE);
-                messageTextView.setBackgroundColor(Color.YELLOW);
+                drawable.setColor(Color.YELLOW);
             }
             else {
+                linearLayout.setGravity(Gravity.START);
                 messengerTextView.setText(everChatMessage.getName());
-                messageTextView.setBackgroundColor(Color.WHITE);
+                drawable.setColor(Color.WHITE);
                 if (everChatMessage.getPhotoUrl() == null) {
                     messengerImageView.setImageDrawable(ContextCompat.getDrawable(
                             ChatAdapter.mContext,
@@ -166,11 +186,76 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
 //            int adapterPosition = getAdapterPosition();
             int viewId = v.getId();
 
-//            switch(viewId) {
-//                case R.id.messengerImageView:
-                    Toast.makeText(mContext, messengerTextView.getText().toString(), Toast.LENGTH_LONG).show();
-//                    break;
-//            }
+            switch(viewId) {
+                case R.id.im_messenger:
+                    final Button button = new Button(mContext);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT);
+                    button.setLayoutParams(lp);
+                    button.setText("Star");
+                    button.setTag("Hello");
+
+                    button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View v) {
+                            final String tmpUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("auth").child(uid);
+                            ref.runTransaction(new Transaction.Handler() {
+                                @Override
+                                public Transaction.Result doTransaction(MutableData mutableData) {
+                                    EverChatProfile everChatProfile = mutableData.getValue(EverChatProfile.class);
+
+                                    if(everChatProfile == null)
+                                        return Transaction.success(mutableData);
+
+                                    if(everChatProfile.getStars() == null || !everChatProfile.getStars().containsKey(tmpUid)) {
+                                        everChatProfile.getStars().put(tmpUid, true);
+                                    } else {
+                                        everChatProfile.getStars().remove(tmpUid);
+                                    }
+                                    mutableData.setValue(everChatProfile);
+
+                                    return Transaction.success(mutableData);
+                                }
+
+                                @Override
+                                public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                                    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+                                }
+                            });
+                        }
+                    });
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
+                    builder.setTitle(mContext.getString(R.string.alert_dialog_title)).setMessage(R.string.alert_dialog_message).setCancelable(true)
+                            .setView(button)
+                            .setPositiveButton(mContext.getString(R.string.alert_dialog_positive), new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int id)
+                                {
+                                            /*String roomId = databaseReference.child(currentCountry).push().getKey();
+                                            String roomName = roomNameEditText.getText().toString();
+                                            databaseReference.child(currentCountry).child(roomId).setValue(new EverChatRoom(roomName, ""));
+
+                                            Intent intent = new Intent(getContext(), ChatActivity.class);
+                                            intent.putExtra(getString(R.string.room_id), roomId);
+                                            intent.putExtra(getString(R.string.room_name), roomName);
+                                            startActivity(intent);*/
+                                }
+                            })
+                            .setNegativeButton(mContext.getString(R.string.alert_dialog_negative), new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int id)
+                                {
+                                    dialog.cancel();
+                                }
+                            });
+                    AppCompatDialog alert = builder.create();
+                    alert.show();
+
+                    break;
+            }
         }
     }
 

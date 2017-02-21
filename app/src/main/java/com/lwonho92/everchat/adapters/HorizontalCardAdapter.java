@@ -15,7 +15,7 @@ import com.lwonho92.everchat.fragments.SearchFragment;
 /**
  * Created by GIGAMOLE on 7/27/16.
  */
-public class HorizontalPagerAdapter extends PagerAdapter {
+public class HorizontalCardAdapter extends PagerAdapter {
     private Context mContext;
     private LayoutInflater mLayoutInflater;
     private SearchFragment.SelectCountryListener mListener;
@@ -24,7 +24,7 @@ public class HorizontalPagerAdapter extends PagerAdapter {
     private final String[] fullCountry;
     private final String[] country;
 
-    public HorizontalPagerAdapter(final Context context, SearchFragment.SelectCountryListener listener) {
+    public HorizontalCardAdapter(final Context context, SearchFragment.SelectCountryListener listener) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
         mListener = listener;

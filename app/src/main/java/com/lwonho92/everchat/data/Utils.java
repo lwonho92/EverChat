@@ -22,10 +22,10 @@ public class Utils {
         String ampm = "";
         switch(cal.get(Calendar.AM_PM)) {
             case Calendar.AM:
-                ampm = "AM";
+                ampm = "am";
                 break;
             case Calendar.PM:
-                ampm = "PM";
+                ampm = "pm";
                 break;
         }
         return String.format("%s %d : %02d", ampm, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));

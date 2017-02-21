@@ -2,6 +2,8 @@
     <string name="app_name">EverChat</string>
     <string name="title_activity_settings">Settings</string>
 
+    <string name="progress_message">Loading User\'s info</string>
+
     <!--Each tabs name-->
     <string name="room">Country</string>
     <string name="search">Select Country</string>
@@ -35,6 +37,10 @@
 
     <string name="alert_dialog_positive">OK</string>
     <string name="alert_dialog_negative">Cancel</string>
+
+    <!--Start Toast messages-->
+    <string name="toast_star_positive">Send star</string>
+    <string name="toast_star_negative"></string>
 
     <!--Google api service message-->
     <string name="googleapi_connection_failed">Called onConnectionFailed: </string>

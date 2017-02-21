@@ -1,5 +1,6 @@
 package com.lwonho92.everchat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -41,26 +42,25 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    ProgressDialog progress;
 
     private GoogleApiClient googleApiClient;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
 
-    public static ViewPagerAdapter adapter;
-
-//    public ProgressDialog dialog;
+    public ViewPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        ProgressDialog.show(this, "EverChat", "사용자 정보 로딩중입니다.", true, true);
+        progress = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.progress_message), true);
 
         toolbar = (Toolbar) findViewById(R.id.tb_main);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -101,6 +101,8 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
                         editor.commit();
 
                         setSelectedCountry(everChatProfile.getCountry());
+
+                        progress.dismiss();
                     } else {
 //                        non - exist
                         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);

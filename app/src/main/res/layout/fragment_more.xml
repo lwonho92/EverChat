@@ -15,7 +15,7 @@
     <Button
         android:id="@+id/bt_settings"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/tv_more_fragment"
         android:text="Settings"
         android:textSize="40sp"

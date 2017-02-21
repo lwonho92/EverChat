@@ -22,21 +22,19 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/im_settings"
-        android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:src="@drawable/ic_account_circle_black_36dp"
-        android:background="@color/colorPrimaryLight"/>
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="2">
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/im_settings"
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:src="@drawable/ic_account_circle_black_36dp"
+                android:background="@color/colorPrimaryLight"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,6 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:entries="@array/short_countries"
+                android:enabled="false"
+                android:clickable="false"
                 />
             <TextView
                 android:layout_width="match_parent"

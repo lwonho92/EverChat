@@ -11,7 +11,7 @@ import android.view.animation.AnimationUtils;
 
 import com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager;
 import com.lwonho92.everchat.R;
-import com.lwonho92.everchat.adapters.HorizontalPagerAdapter;
+import com.lwonho92.everchat.adapters.HorizontalCardAdapter;
 
 /**
  * Created by MY on 2017-02-14.
@@ -50,7 +50,7 @@ public class SearchFragment extends Fragment {
 
 //        ViewPagerAdapter
         infiniteCycleViewPager = (HorizontalInfiniteCycleViewPager) getView().findViewById(R.id.hicvp);
-        infiniteCycleViewPager.setAdapter(new HorizontalPagerAdapter(getContext(), mListener));
+        infiniteCycleViewPager.setAdapter(new HorizontalCardAdapter(getContext(), mListener));
         infiniteCycleViewPager.setInterpolator(
                 AnimationUtils.loadInterpolator(getContext(), android.R.anim.overshoot_interpolator)
         );

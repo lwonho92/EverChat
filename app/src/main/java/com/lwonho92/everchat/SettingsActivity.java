@@ -83,7 +83,6 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
                     for(int i = 0; i < fullCountries.length; i++) {
                         if(fullCountries[i].equals(everChatProfile.getCountry())) {
                             countrySpinner.setSelection(i);
-                            countrySpinner.setEnabled(false);
                             break;
                         }
                     }
@@ -96,6 +95,7 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
                     profileEditText.setText(everChatProfile.getProfile());
                 } else {
                     everChatProfile = new EverChatProfile();
+                    countrySpinner.setEnabled(true);
                 }
             }
 

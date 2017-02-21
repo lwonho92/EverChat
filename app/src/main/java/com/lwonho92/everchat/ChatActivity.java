@@ -19,9 +19,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.lwonho92.everchat.adapters.ChatAdapter;
 import com.lwonho92.everchat.data.EverChatMessage;
 
-public class ChatActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener {
+public class ChatActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener {
     private static final String TAG = "ChatActivity";
     public static final String COUNTRY_ID = "country_id";
     public static final String ROOM_ID = "room_id";
@@ -49,9 +46,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
     private String roomId = "";
     private String roomName = "";
     private String prefLanguage = "";
-
-//    Google instance variables
-    private GoogleApiClient googleApiClient;
 
 //    Firebase instance variables
     private FirebaseAuth firebaseAuth;
@@ -87,11 +81,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
         recyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView);
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API)
-                .build();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("messages");
 
@@ -154,29 +143,47 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.room, menu);
+        this.menu = menu;
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
+        /*int itemId = item.getItemId();
+        item.setTitle("Off");
         switch(itemId) {
-            case R.id.action_signout:
-                firebaseAuth.signOut();
-                Auth.GoogleSignInApi.signOut(googleApiClient);
-                mUsername = ANONYMOUS;
-                startActivity(new Intent(this, SignInActivity.class));
-                finish();
+            case R.id.action_translation_on:
+
                 return true;
-        }
+            case R.id.action_translation_off:
+
+                return true;
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
 
+    private Menu menu;
+    private String inBedMenuTitle = "Set to 'In bed'";
+    private String outOfBedMenuTitle = "Set to 'Out of bed'";
+    private boolean inBed = false;
+
+    private void updateMenuTitles() {
+        MenuItem bedMenuItem = menu.findItem(R.id.action_translation_on);
+        if (inBed) {
+            bedMenuItem.setTitle(outOfBedMenuTitle);
+        } else {
+            bedMenuItem.setTitle(inBedMenuTitle);
+        }
+        inBed = !inBed;
+    }
+
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "Called onConnectionFailed:" + connectionResult);
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        updateMenuTitles();
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override

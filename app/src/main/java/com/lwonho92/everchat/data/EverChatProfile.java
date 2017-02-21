@@ -15,8 +15,10 @@ public class EverChatProfile {
     private String userName;
     private String photoUrl;
     private String country;
+
     private String language;
     private String profile;
+    private HashMap<String, Boolean> stars = new HashMap<>();
 
     public EverChatProfile() {
 
@@ -69,6 +71,17 @@ public class EverChatProfile {
         this.profile = profile;
     }
 
+    public HashMap<String, Boolean> getStars() {
+        return stars;
+    }
+
+    public void setStars() {
+        this.stars = new HashMap<>();
+    }
+    public void setStars(HashMap<String, Boolean> stars) {
+        this.stars = stars;
+    }
+
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -77,6 +90,12 @@ public class EverChatProfile {
         result.put("country", country);
         result.put("language", language);
         result.put("profile", profile);
+        return result;
+    }
+
+    public Map<String, Object> toStarsMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("stars", stars);
         return result;
     }
 }
