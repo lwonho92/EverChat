@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
 import com.lwonho92.everchat.ChatActivity;
@@ -23,7 +22,7 @@ public class RoomAdapter extends FirebaseRecyclerAdapter<EverChatRoom, RoomAdapt
 
     public static class RoomAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 //        CircleImageView
-        private TextView messengerTextView;
+        private TextView roomNameTextView;
         private TextView messageTextView;
 
         public String id;
@@ -31,14 +30,14 @@ public class RoomAdapter extends FirebaseRecyclerAdapter<EverChatRoom, RoomAdapt
         public RoomAdapterViewHolder(View itemView) {
             super(itemView);
 
-            messengerTextView = (TextView) itemView.findViewById(R.id.last_messengerTextView);
+            roomNameTextView = (TextView) itemView.findViewById(R.id.last_messengerTextView);
             messageTextView = (TextView) itemView.findViewById(R.id.last_messageTextView);
 
             itemView.setOnClickListener(this);
         }
 
         public void bind(EverChatRoom everChatRoom) {
-            messengerTextView.setText(everChatRoom.getName());
+            roomNameTextView.setText(everChatRoom.getName());
             messageTextView.setText(everChatRoom.getText());
 
             id = everChatRoom.getId();
@@ -52,7 +51,8 @@ public class RoomAdapter extends FirebaseRecyclerAdapter<EverChatRoom, RoomAdapt
             switch(viewId) {
                 default:
                     Intent intent = new Intent(mContext, ChatActivity.class);
-                    intent.putExtra(ChatActivity.ROOM_ID, id);
+                    intent.putExtra(mContext.getString(R.string.room_id), id);
+                    intent.putExtra(mContext.getString(R.string.room_name), roomNameTextView.getText().toString());
                     mContext.startActivity(intent);
 //                    Toast.makeText(mContext, id.toString(), Toast.LENGTH_LONG).show();
                     break;

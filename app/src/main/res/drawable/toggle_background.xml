@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:drawable="@drawable/cn"></item>
+    <item android:left="10dp" android:drawable="@drawable/toggle_drawable_left"
+          android:gravity="center_vertical|center_horizontal" />
+</layer-list>

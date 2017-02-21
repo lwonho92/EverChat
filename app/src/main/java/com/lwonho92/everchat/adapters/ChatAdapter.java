@@ -1,5 +1,6 @@
 package com.lwonho92.everchat.adapters;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -20,6 +22,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -33,6 +36,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.lwonho92.everchat.ChatActivity;
+import com.lwonho92.everchat.ProfileActivity;
 import com.lwonho92.everchat.data.EverChatMessage;
 import com.lwonho92.everchat.R;
 import com.lwonho92.everchat.data.EverChatProfile;
@@ -188,10 +192,13 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
 
             switch(viewId) {
                 case R.id.im_messenger:
-                    final Button button = new Button(mContext);
+                    Intent intent = new Intent(mContext, ProfileActivity.class);
+                    intent.putExtra(mContext.getString(R.string.selected_user_id), uid);
+                    mContext.startActivity(intent);
+                    /*final Button button = new Button(mContext);
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.MATCH_PARENT);
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
                     button.setLayoutParams(lp);
                     button.setText("Star");
                     button.setTag("Hello");
@@ -222,26 +229,49 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
                                 @Override
                                 public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
                                     Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+                                    if(databaseError == null) {
+                                        EverChatProfile everChatProfile = (EverChatProfile)dataSnapshot.getValue(EverChatProfile.class);
+                                        if(everChatProfile == null)
+                                            return ;
+
+                                        if(everChatProfile.getStars() == null)
+                                            button.setText("0");
+                                        else {
+                                            try {
+                                                button.setText(everChatProfile.getStars().size() + "");
+                                            } catch(Exception ex) {
+                                                Log.e(TAG, ex.toString());
+                                            }
+                                        }
+                                    }
                                 }
                             });
                         }
                     });
 
+                    final ToggleButton toggleButton = new ToggleButton(mContext);
+                    toggleButton.setTextOn("줬");
+                    toggleButton.setTextOff("뺏");
+                    toggleButton.setChecked(true);
+                    toggleButton.setLayoutParams(lp);
+//                    toggleButton.setBackground(mContext.getResources().getDrawable(R.drawable.toggle_background));
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
                     builder.setTitle(mContext.getString(R.string.alert_dialog_title)).setMessage(R.string.alert_dialog_message).setCancelable(true)
                             .setView(button)
+//                            .setView(toggleButton)
                             .setPositiveButton(mContext.getString(R.string.alert_dialog_positive), new DialogInterface.OnClickListener()
                             {
                                 public void onClick(DialogInterface dialog, int id)
                                 {
-                                            /*String roomId = databaseReference.child(currentCountry).push().getKey();
+                                            *//*String roomId = databaseReference.child(currentCountry).push().getKey();
                                             String roomName = roomNameEditText.getText().toString();
                                             databaseReference.child(currentCountry).child(roomId).setValue(new EverChatRoom(roomName, ""));
 
                                             Intent intent = new Intent(getContext(), ChatActivity.class);
                                             intent.putExtra(getString(R.string.room_id), roomId);
                                             intent.putExtra(getString(R.string.room_name), roomName);
-                                            startActivity(intent);*/
+                                            startActivity(intent);*//*
                                 }
                             })
                             .setNegativeButton(mContext.getString(R.string.alert_dialog_negative), new DialogInterface.OnClickListener()
@@ -253,7 +283,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
                             });
                     AppCompatDialog alert = builder.create();
                     alert.show();
-
+*/
                     break;
             }
         }

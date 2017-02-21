@@ -18,6 +18,9 @@
     <string name="pref_default_country">kr</string>
     <string name="pref_default_language">ko</string>
 
+    <!--Use intent key in ProfileActivity-->
+    <string name="selected_user_id">selected_user_id</string>
+
     <!--Use intent key in ChatActivity-->
     <string name="room_id">room_id</string>
     <string name="room_name">room_name</string>
