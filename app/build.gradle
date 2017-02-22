@@ -52,10 +52,15 @@ dependencies {
 //    Track User Flows
 //    Monetize with Ads
 //    Report Crashes
+//    Add Firebase storage.
+    compile 'com.google.firebase:firebase-storage:10.0.1'
 
 //    Firebase UI(for FirebaseRecyclerAdapter)
     compile 'com.android.support:support-v4:25.1.1'
     compile 'com.android.support:support-vector-drawable:25.1.1'
+
+//    Apache Commons-io.
+    compile 'commons-io:commons-io:2.5'
 
     testCompile 'junit:junit:4.12'
 }

@@ -2,6 +2,8 @@ package com.lwonho92.everchat;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -19,13 +21,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.lwonho92.everchat.adapters.ChatAdapter;
 import com.lwonho92.everchat.data.EverChatMessage;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -165,6 +178,47 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
 
                 return true;
         }*/
+
+//        (TEST) Using Apache Commons-io for loading image from http url, then file(cache) upload to Firebase storage.
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://everchat-6ce20.appspot.com");
+        final StorageReference mountainsRef = storageRef.child("mountains.png");
+
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    URL url = new URL("https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png");
+                    String tDir = System.getProperty("java.io.tmpdir");
+                    Log.e(TAG, tDir.toString());
+                    String path = tDir + "tmp" + ".png";
+                    File file = new File(path);
+                    file.deleteOnExit();
+                    FileUtils.copyURLToFile(url, file);
+
+                    InputStream stream = new FileInputStream(file);
+                    UploadTask uploadTask = mountainsRef.putStream(stream);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                            Log.e(TAG, "Upload Failed");
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                            Log.e(TAG, "Upload Success: " + downloadUrl.toString());
+                        }
+                    });
+                } catch(Exception ex) {
+                    Log.e(TAG, "Upload Exception: " + ex.toString());
+                }
+                return null;
+            }
+        }.execute();
 
         return super.onOptionsItemSelected(item);
     }
