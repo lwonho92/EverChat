@@ -81,7 +81,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
                 EverChatRoom.class,
                 R.layout.item_room,
                 RoomAdapter.RoomAdapterViewHolder.class,
-                databaseReference.child(currentCountry));
+                databaseReference.child(currentCountry), currentCountry);
 
         firebaseRecyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -113,7 +113,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
                 EverChatRoom.class,
                 R.layout.item_room,
                 RoomAdapter.RoomAdapterViewHolder.class,
-                databaseReference.child(currentCountry));
+                databaseReference.child(currentCountry), currentCountry);
         firebaseRecyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {

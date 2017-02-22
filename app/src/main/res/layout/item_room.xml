@@ -18,6 +18,12 @@
             android:layout_height="48dp"
             android:src="@drawable/cn"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="room name: "
+            android:layout_gravity="top"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

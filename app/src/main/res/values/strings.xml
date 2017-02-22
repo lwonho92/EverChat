@@ -28,6 +28,7 @@
 
     <!--Using intent keys and labels in ChatActivity-->
     <string name="room_id">room_id</string>
+    <string name="room_country">room_country</string>
     <string name="room_name">room_name</string>
 
     <!--Naver api url and keys-->

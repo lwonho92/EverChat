@@ -18,7 +18,8 @@ import com.lwonho92.everchat.data.EverChatRoom;
  */
 
 public class RoomAdapter extends FirebaseRecyclerAdapter<EverChatRoom, RoomAdapter.RoomAdapterViewHolder> {
-    private static Context mContext = null;
+    private static Context mContext;
+    private static String country;
 
     public static class RoomAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 //        CircleImageView
@@ -52,6 +53,7 @@ public class RoomAdapter extends FirebaseRecyclerAdapter<EverChatRoom, RoomAdapt
                 default:
                     Intent intent = new Intent(mContext, ChatActivity.class);
                     intent.putExtra(mContext.getString(R.string.room_id), id);
+                    intent.putExtra(mContext.getString(R.string.room_country), country);
                     intent.putExtra(mContext.getString(R.string.room_name), roomNameTextView.getText().toString());
                     mContext.startActivity(intent);
 //                    Toast.makeText(mContext, id.toString(), Toast.LENGTH_LONG).show();
@@ -60,10 +62,11 @@ public class RoomAdapter extends FirebaseRecyclerAdapter<EverChatRoom, RoomAdapt
         }
     }
 
-    public RoomAdapter(Context context, Class<EverChatRoom> modelClass, int modelLayout, Class<RoomAdapterViewHolder> viewHolderClass, Query ref) {
+    public RoomAdapter(Context context, Class<EverChatRoom> modelClass, int modelLayout, Class<RoomAdapterViewHolder> viewHolderClass, Query ref, String country) {
         super(modelClass, modelLayout, viewHolderClass, ref);
 
         mContext = context;
+        this.country = country;
     }
 
     @Override

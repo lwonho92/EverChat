@@ -28,7 +28,7 @@ public class EverChatMessage {
     private String message;
     private String language;
     private String uid;
-    Long timestamp;
+    private Long timestamp;
 
     public EverChatMessage() {
     }
@@ -97,6 +97,7 @@ public class EverChatMessage {
         result.put("message", message);
         result.put("language", language);
         result.put("uid", uid);
+        result.put("timestamp", getTimestamp());
 
         return result;
     }

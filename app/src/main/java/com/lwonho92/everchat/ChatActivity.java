@@ -26,6 +26,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.lwonho92.everchat.adapters.ChatAdapter;
 import com.lwonho92.everchat.data.EverChatMessage;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ChatActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener {
     private static final String TAG = "ChatActivity";
     public static final String COUNTRY_ID = "country_id";
@@ -44,6 +47,7 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
     private String mPhotoUrl;
 
     private String roomId = "";
+    private String roomCountry = "";
     private String roomName = "";
     private String prefLanguage = "";
 
@@ -67,6 +71,7 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
         if(intent != null) {
             roomId = intent.getStringExtra(getString(R.string.room_id));
             roomName = intent.getStringExtra(getString(R.string.room_name));
+            roomCountry = intent.getStringExtra(getString(R.string.room_country));
             setTitle(roomName);
         }
         prefLanguage = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_language), getString(R.string.pref_default_language));
@@ -82,13 +87,13 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("messages");
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         firebaseRecyclerAdapter = new ChatAdapter(this,
                 EverChatMessage.class,
                 R.layout.item_message,
                 ChatAdapter.ChatAdapterViewHolder.class,
-                databaseReference.child(roomId));
+                databaseReference.child("messages").child(roomId));
 
         firebaseRecyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -216,8 +221,17 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
 
                 break;
             case R.id.send_button:
+                String key = databaseReference.child("messages").child(roomId).push().getKey();
                 EverChatMessage everChatMessage = new EverChatMessage(mUsername, mPhotoUrl, editText.getText().toString(), prefLanguage, FirebaseAuth.getInstance().getCurrentUser().getUid());
-                databaseReference.child(roomId).push().setValue(everChatMessage);
+                Map<String, Object> postValues = everChatMessage.toMap();
+
+                Map<String, Object> childUpdates = new HashMap<>();
+                childUpdates.put("/messages/" + roomId + "/" + key, postValues);
+                childUpdates.put("/room_names/" + roomCountry + "/" + roomId + "/text", everChatMessage.getMessage());
+
+                databaseReference.updateChildren(childUpdates);
+//                databaseReference.child("messages").child(roomId).child(key).setValue(everChatMessage);
+
                 editText.setText("");
                 break;
         }
