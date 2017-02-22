@@ -1,11 +1,11 @@
 package com.lwonho92.everchat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,29 +20,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
+import com.gun0912.tedpicker.Config;
+import com.gun0912.tedpicker.ImagePickerActivity;
 import com.lwonho92.everchat.adapters.ChatAdapter;
 import com.lwonho92.everchat.data.EverChatMessage;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChatActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener {
+public class ChatActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, PermissionListener {
     private static final String TAG = "ChatActivity";
     public static final String COUNTRY_ID = "country_id";
     public static final String ROOM_ID = "room_id";
@@ -168,19 +163,27 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*int itemId = item.getItemId();
-        item.setTitle("Off");
+        int itemId = item.getItemId();
+
         switch(itemId) {
             case R.id.action_translation_on:
-
+                item.setTitle("Off");
                 return true;
             case R.id.action_translation_off:
-
+                item.setTitle("Off");
                 return true;
-        }*/
+            case R.id.action_tedpicker:
+
+                new TedPermission(this)
+                        .setPermissionListener(this)
+                        .setDeniedMessage(getString(R.string.permission_deny_guide))
+                        .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                        .check();
+                return true;
+        }
 
 //        (TEST) Using Apache Commons-io for loading image from http url, then file(cache) upload to Firebase storage.
-        FirebaseStorage storage = FirebaseStorage.getInstance();
+        /*FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReferenceFromUrl("gs://everchat-6ce20.appspot.com");
         final StorageReference mountainsRef = storageRef.child("mountains.png");
 
@@ -195,7 +198,7 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
                     String path = tDir + "tmp" + ".png";
                     File file = new File(path);
                     file.deleteOnExit();
-                    FileUtils.copyURLToFile(url, file);
+//                    FileUtils.copyURLToFile(url, file);
 
                     InputStream stream = new FileInputStream(file);
                     UploadTask uploadTask = mountainsRef.putStream(stream);
@@ -218,9 +221,38 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
                 }
                 return null;
             }
-        }.execute();
+        };*/
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private static final int INTENT_REQUEST_GET_IMAGES = 13;
+    private void getImages() {
+        Config config = new Config();
+        config.setToolbarTitleRes(R.string.custom_title);
+        config.setSelectionMin(0);
+        config.setSelectionLimit(4);
+
+        ImagePickerActivity.setConfig(config);
+
+        Intent intent  = new Intent(this, ImagePickerActivity.class);
+        startActivityForResult(intent,INTENT_REQUEST_GET_IMAGES);
+
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == INTENT_REQUEST_GET_IMAGES && resultCode == Activity.RESULT_OK ) {
+
+            ArrayList<Uri> image_uris = intent.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
+            String str = "";
+
+            //do something
+            for(Uri uri : image_uris) {
+                Log.e(TAG, uri.toString());
+            }
+        }
     }
 
     private Menu menu;
@@ -296,5 +328,16 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
     }
     private void invisiableTranslation() {
         translateButton.setAlpha(0.5F);
+    }
+
+    @Override
+    public void onPermissionGranted() {
+        Toast.makeText(ChatActivity.this, getString(R.string.permission_granted), Toast.LENGTH_SHORT).show();
+        getImages();
+    }
+
+    @Override
+    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+        Toast.makeText(ChatActivity.this, getString(R.string.permission_denied) + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
     }
 }

@@ -54,4 +54,13 @@
     <string name="firebase_single_value_error">Firebase single value event error</string>
     <string name="firebase_iterate_value_error">Firebase iterate value event error</string>
     <string name="firebase_transaction_error">Firebase post transaction error</string>
+
+    <!--TedPicker strings-->
+    <string name="custom_title">Pictures</string>
+
+    <!--TedPermission strings-->
+    <string name="permission_granted">Permission Granted</string>
+    <string name="permission_denied">Permission Denied\n</string>
+    <string name="permission_deny_guide">If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]</string>
+
 </resources>

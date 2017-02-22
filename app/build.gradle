@@ -60,7 +60,12 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:25.1.1'
 
 //    Apache Commons-io.
-    compile 'commons-io:commons-io:2.5'
+//    compile 'commons-io:commons-io:2.5'
+//    For TedPicker
+    compile 'com.github.ParkSangGwon:TedPicker:v1.0.10'
+
+//    After android marshmallow, grant permission.
+    compile 'gun0912.ted:tedpermission:1.0.3'
 
     testCompile 'junit:junit:4.12'
 }

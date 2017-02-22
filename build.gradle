@@ -16,6 +16,10 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        //        For TedPicker
+        maven { url "https://repo.commonsware.com.s3.amazonaws.com" }
+        maven { url "https://jitpack.io" }
+        maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
     }
 }
 

@@ -113,6 +113,9 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
                 EverChatRoom.class,
                 R.layout.item_room,
                 RoomAdapter.RoomAdapterViewHolder.class,
+
+//                Check this point(java.lang.NullPointerException: Attempt to invoke virtual method
+//                'com.google.firebase.database.DatabaseReference com.google.firebase.database.DatabaseReference.child(java.lang.String)' on a null object reference)
                 databaseReference.child(currentCountry), currentCountry);
         firebaseRecyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override

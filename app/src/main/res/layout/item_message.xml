@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:padding="10dp"
+                android:autoLink="web"
                 android:background="@drawable/rounded_message"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
 
