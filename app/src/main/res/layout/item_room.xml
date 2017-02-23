@@ -13,10 +13,10 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/im_messenger"
+            android:id="@+id/im_photo"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/cn"/>
+            android:src="@drawable/flag_cn"/>
 
         <TextView
             android:layout_width="wrap_content"

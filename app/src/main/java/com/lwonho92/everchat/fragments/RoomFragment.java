@@ -67,6 +67,13 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
         roomFragmentTextView = (TextView) getView().findViewById(R.id.tv_room_fragment);
 
         famButton = (FloatingActionsMenu) getView().findViewById(R.id.fam_button);
+        famButton.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus)
+                    famButton.collapse();
+            }
+        });
         fabHomeland = (FloatingActionButton) getView().findViewById(R.id.fab_homeland);
         fabCreateRoom = (FloatingActionButton) getView().findViewById(R.id.fab_create_room);
         fabHomeland.setOnClickListener(this);

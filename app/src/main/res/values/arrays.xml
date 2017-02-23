@@ -26,9 +26,9 @@
     </string-array>
 
     <array name="drawable_countries">
-        <item>@drawable/kr</item>
-        <item>@drawable/cn</item>
-        <item>@drawable/jp</item>
-        <item>@drawable/us</item>
+        <item>@drawable/flag_kr</item>
+        <item>@drawable/flag_cn</item>
+        <item>@drawable/flag_jp</item>
+        <item>@drawable/flag_us</item>
     </array>
 </resources>

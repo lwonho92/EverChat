@@ -20,7 +20,7 @@ public class HorizontalCardAdapter extends PagerAdapter {
     private LayoutInflater mLayoutInflater;
     private SearchFragment.SelectCountryListener mListener;
 
-    private final int[] drawableCountry = {R.drawable.kr, R.drawable.cn, R.drawable.jp, R.drawable.us};
+    private final int[] drawableCountry = {R.drawable.flag_kr, R.drawable.flag_cn, R.drawable.flag_jp, R.drawable.flag_us};
     private final String[] fullCountry;
     private final String[] country;
 

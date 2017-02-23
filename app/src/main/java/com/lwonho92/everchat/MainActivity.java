@@ -1,6 +1,7 @@
 package com.lwonho92.everchat;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -56,7 +57,16 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        progress = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.progress_message), true);
+        progress = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.progress_message), true, true);
+        progress.setProgressStyle(android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        progress.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dialog.dismiss();
+                finish();
+            }
+        });
 
         toolbar = (Toolbar) findViewById(R.id.tb_main);
         setSupportActionBar(toolbar);
@@ -72,6 +82,11 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(getString(R.string.pref_translate), getResources().getBoolean(R.bool.pref_default_translate));
+        editor.commit();
     }
 
     @Override
@@ -90,24 +105,23 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()) {
-//                        exist
+//                        profile exist
                         EverChatProfile everChatProfile = dataSnapshot.getValue(EverChatProfile.class);
 
                         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString(getString(R.string.pref_country), everChatProfile.getCountry());
                         editor.putString(getString(R.string.pref_language), everChatProfile.getLanguage());
-                        editor.putBoolean(getString(R.string.pref_translate), getResources().getBoolean(R.bool.pref_default_translate));
                         editor.commit();
 
                         setSelectedCountry(everChatProfile.getCountry());
 
                         progress.dismiss();
                     } else {
-//                        non - exist
+//                        profile non - exist
+                        Toast.makeText(MainActivity.this, "non-exist", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                         startActivity(intent);
-                        Toast.makeText(MainActivity.this, "non-exist", Toast.LENGTH_LONG).show();
                     }
                 }
 

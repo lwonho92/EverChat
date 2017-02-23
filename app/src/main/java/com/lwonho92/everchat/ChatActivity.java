@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,12 +22,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.gun0912.tedpicker.Config;
@@ -33,19 +41,21 @@ import com.gun0912.tedpicker.ImagePickerActivity;
 import com.lwonho92.everchat.adapters.ChatAdapter;
 import com.lwonho92.everchat.data.EverChatMessage;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, PermissionListener {
     private static final String TAG = "ChatActivity";
-    public static final String COUNTRY_ID = "country_id";
-    public static final String ROOM_ID = "room_id";
-    private static final String ANONYMOUS = "anonymous";
+    private static final int INTENT_REQUEST_GET_IMAGES = 13;
 
     private Toolbar toolbar;
 
-    private Button sendButton, translateButton;
+    private Button sendButton;
+    private ImageButton pictureImageButton, translateImageButton;
     private EditText editText;
 
     private RecyclerView recyclerView;
@@ -84,11 +94,14 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
         }
         prefLanguage = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_language), getString(R.string.pref_default_language));
 
-        mUsername = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        mPhotoUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        mUsername = firebaseUser.getDisplayName();
+        mPhotoUrl = firebaseUser.getPhotoUrl().toString();
 
-        translateButton = (Button) findViewById(R.id.translate_button);
+        translateImageButton = (ImageButton) findViewById(R.id.ib_translate);
         sendButton = (Button) findViewById(R.id.send_button);
+        pictureImageButton = (ImageButton) findViewById(R.id.ib_picture);
         editText = (EditText) findViewById(R.id.messageEditText);
 
         recyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView);
@@ -144,7 +157,7 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
             }
         });
 
-        translateButton.setOnClickListener(this);
+        translateImageButton.setOnClickListener(this);
         boolean isOnTranslate = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_translate), getResources().getBoolean(R.bool.pref_default_translate));
         if(isOnTranslate) {
             visiableTranslation();
@@ -152,6 +165,7 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
             invisiableTranslation();
         }
         sendButton.setOnClickListener(this);
+        pictureImageButton.setOnClickListener(this);
     }
 
     @Override
@@ -172,72 +186,21 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
             case R.id.action_translation_off:
                 item.setTitle("Off");
                 return true;
-            case R.id.action_tedpicker:
-
-                new TedPermission(this)
-                        .setPermissionListener(this)
-                        .setDeniedMessage(getString(R.string.permission_deny_guide))
-                        .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
-                        .check();
-                return true;
         }
-
-//        (TEST) Using Apache Commons-io for loading image from http url, then file(cache) upload to Firebase storage.
-        /*FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://everchat-6ce20.appspot.com");
-        final StorageReference mountainsRef = storageRef.child("mountains.png");
-
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    URL url = new URL("https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png");
-                    String tDir = System.getProperty("java.io.tmpdir");
-                    Log.e(TAG, tDir.toString());
-                    String path = tDir + "tmp" + ".png";
-                    File file = new File(path);
-                    file.deleteOnExit();
-//                    FileUtils.copyURLToFile(url, file);
-
-                    InputStream stream = new FileInputStream(file);
-                    UploadTask uploadTask = mountainsRef.putStream(stream);
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle unsuccessful uploads
-                            Log.e(TAG, "Upload Failed");
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                            Log.e(TAG, "Upload Success: " + downloadUrl.toString());
-                        }
-                    });
-                } catch(Exception ex) {
-                    Log.e(TAG, "Upload Exception: " + ex.toString());
-                }
-                return null;
-            }
-        };*/
 
         return super.onOptionsItemSelected(item);
     }
 
-    private static final int INTENT_REQUEST_GET_IMAGES = 13;
     private void getImages() {
         Config config = new Config();
         config.setToolbarTitleRes(R.string.custom_title);
-        config.setSelectionMin(0);
-        config.setSelectionLimit(4);
+        config.setSelectionMin(1);
+        config.setSelectionLimit(5);
 
         ImagePickerActivity.setConfig(config);
 
         Intent intent  = new Intent(this, ImagePickerActivity.class);
         startActivityForResult(intent,INTENT_REQUEST_GET_IMAGES);
-
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -245,13 +208,53 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
 
         if (requestCode == INTENT_REQUEST_GET_IMAGES && resultCode == Activity.RESULT_OK ) {
 
-            ArrayList<Uri> image_uris = intent.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
-            String str = "";
+            final ArrayList<Uri> image_uris = intent.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
 
-            //do something
-            for(Uri uri : image_uris) {
-                Log.e(TAG, uri.toString());
-            }
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    //do something
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageRef = storage.getReferenceFromUrl("gs://everchat-6ce20.appspot.com");
+
+                    for (Uri uri : image_uris) {
+                        final String key = databaseReference.child("messages").child(roomId).push().getKey();
+                        StorageReference saveRef = storageRef.child(roomId).child(key).child(uri.getLastPathSegment());
+                        try {
+                            InputStream stream = new FileInputStream(new File(uri.toString()));
+                            UploadTask uploadTask = saveRef.putStream(stream);
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    Log.e(TAG, "Upload Failed");
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+//                                    Save gs://<bucket>/<roomId>/<messageId>/<file_name>
+                                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                    Log.e(TAG, "Upload Success: " + downloadUrl.toString());
+
+                                    EverChatMessage everChatMessage = new EverChatMessage(mUsername, mPhotoUrl, prefLanguage, FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                    everChatMessage.setPicture(downloadUrl.toString());
+                                    Map<String, Object> postValues = everChatMessage.toMap();
+
+                                    Map<String, Object> childUpdates = new HashMap<>();
+                                    childUpdates.put("/messages/" + roomId + "/" + key, postValues);
+                                    childUpdates.put("/room_names/" + roomCountry + "/" + roomId + "/text", "picture");
+
+                                    databaseReference.updateChildren(childUpdates);
+                                }
+                            });
+                        } catch(Exception ex) {
+                            Log.e(TAG, "Upload Exception: " + ex.toString());
+                        }
+                    }
+
+                    return null;
+                }
+            }.execute();
         }
     }
 
@@ -272,7 +275,7 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        updateMenuTitles();
+//        updateMenuTitles();
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -289,7 +292,7 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
         int selectedId = v.getId();
 
         switch(selectedId) {
-            case R.id.translate_button:
+            case R.id.ib_translate:
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
                 SharedPreferences.Editor editor = pref.edit();
 
@@ -306,9 +309,17 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
 //                recyclerView.swapAdapter(firebaseRecyclerAdapter, true);
 
                 break;
+            case R.id.ib_picture:
+                new TedPermission(this)
+                        .setPermissionListener(this)
+                        .setDeniedMessage(getString(R.string.permission_deny_guide))
+                        .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                        .check();
+                break;
             case R.id.send_button:
                 String key = databaseReference.child("messages").child(roomId).push().getKey();
-                EverChatMessage everChatMessage = new EverChatMessage(mUsername, mPhotoUrl, editText.getText().toString(), prefLanguage, FirebaseAuth.getInstance().getCurrentUser().getUid());
+                EverChatMessage everChatMessage = new EverChatMessage(mUsername, mPhotoUrl, prefLanguage, FirebaseAuth.getInstance().getCurrentUser().getUid());
+                everChatMessage.setMessage(editText.getText().toString());
                 Map<String, Object> postValues = everChatMessage.toMap();
 
                 Map<String, Object> childUpdates = new HashMap<>();
@@ -324,10 +335,10 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
     }
 
     private void visiableTranslation() {
-        translateButton.setAlpha(1.0F);
+        translateImageButton.setAlpha(1.0F);
     }
     private void invisiableTranslation() {
-        translateButton.setAlpha(0.5F);
+        translateImageButton.setAlpha(0.5F);
     }
 
     @Override

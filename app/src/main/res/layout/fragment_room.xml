@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/colorAccent"
             fab:fab_title="@string/fab_create_room_label"
-            fab:fab_icon="@drawable/ic_note_add_white_48dp"
+            fab:fab_icon="@drawable/ic_action_add_room"
             fab:fab_colorPressed="@color/white_pressed"/>
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>

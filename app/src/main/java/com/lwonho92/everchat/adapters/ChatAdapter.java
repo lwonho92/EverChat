@@ -1,9 +1,11 @@
 package com.lwonho92.everchat.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -12,7 +14,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -51,77 +58,117 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
 
     public static class ChatAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         LinearLayout linearLayout;
-        public CircleImageView messengerImageView;
-        public TextView messengerTextView;
-        public TextView messageTextView;
-        public TextView timestampTextView;
-        public String uid;
+        private CircleImageView photoImageView;
+        private TextView messengerTextView;
+        private TextView messageTextView;
+        private ImageButton pictureImageButton;
+        private TextView timestampTextView;
+        private String uid;
 
         public ChatAdapterViewHolder(View itemView) {
             super(itemView);
 
             linearLayout = (LinearLayout) itemView.findViewById(R.id.ll_message);
-            messengerImageView = (CircleImageView) itemView.findViewById(R.id.im_messenger);
+            photoImageView = (CircleImageView) itemView.findViewById(R.id.im_photo);
             messengerTextView = (TextView) itemView.findViewById(R.id.tv_messenger);
             messageTextView = (TextView) itemView.findViewById(R.id.tv_message);
+            pictureImageButton = (ImageButton) itemView.findViewById(R.id.ib_picture);
             timestampTextView = (TextView) itemView.findViewById(R.id.tv_timestamp);
 
-            messengerImageView.setOnClickListener(this);
+            photoImageView.setOnClickListener(this);
         }
 
         public void bind(final EverChatMessage everChatMessage, int type) {
             timestampTextView.setText(Utils.getMillisToStr(everChatMessage.getTimestampLong()));
             uid = everChatMessage.getUid();
-            GradientDrawable drawable = (GradientDrawable) messageTextView.getBackground();
+
+            GradientDrawable drawable = null;
+            if(everChatMessage.getMessage() != null) {
+//                for message
+                drawable = (GradientDrawable) messageTextView.getBackground();
+                messageTextView.setVisibility(View.VISIBLE);
+
+                new AsyncTask<Void, Void, String>() {
+                    @Override
+                    protected String doInBackground(Void... params) {
+                        String prefDefaultLanguage = mContext.getString(R.string.pref_default_language);
+                        String source = everChatMessage.getLanguage();
+                        String target = PreferenceManager.getDefaultSharedPreferences(mContext).getString(mContext.getString(R.string.pref_language), prefDefaultLanguage);
+                        String message = everChatMessage.getMessage();
+
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
+                        boolean isOnTranslate = pref.getBoolean(mContext.getString(R.string.pref_translate), mContext.getResources().getBoolean(R.bool.pref_default_translate));
+
+                        if(isOnTranslate == false || source.equals(target)) {
+//                        Both languages are same.
+                            return message;
+                        }
+                        else if(source.equals(prefDefaultLanguage) || target.equals(prefDefaultLanguage)) {
+//                        At least a language is Korean.
+                            return translateMessage(source, target, message);
+                        } else {
+//                        Both languages are not Korean.
+                            String tmp = translateMessage(source, prefDefaultLanguage, message);
+                            return translateMessage(prefDefaultLanguage, target, tmp);
+                        }
+                    }
+
+                    @Override
+                    protected void onPostExecute(String str) {
+                        messageTextView.setText(str);
+                    }
+                }.execute();
+            } else if(everChatMessage.getPicture() != null) {
+//                for picture
+                drawable = (GradientDrawable) pictureImageButton.getBackground();
+                pictureImageButton.setVisibility(View.VISIBLE);
+
+                Glide.with(ChatAdapter.mContext)
+                        .load(everChatMessage.getPicture())
+                        .into(pictureImageButton);
+                pictureImageButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Dialog dialog = new Dialog(mContext);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.getWindow().setBackgroundDrawable( new ColorDrawable(android.graphics.Color.TRANSPARENT) );
+
+                        ImageView imageView = new ImageView(mContext);
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        Glide.with(mContext)
+                                .load(everChatMessage.getPicture())
+                                .into(imageView);
+                        dialog.addContentView(imageView, new RelativeLayout.LayoutParams(
+                                ViewGroup.LayoutParams.WRAP_CONTENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                        dialog.show();
+                    }
+                });
+            }
+
             if(type == 0) {
+//                sent message me
                 linearLayout.setGravity(Gravity.END);
-                messengerImageView.setVisibility(View.INVISIBLE);
                 drawable.setColor(Color.YELLOW);
             }
             else {
+//                sent message others
                 linearLayout.setGravity(Gravity.START);
+                photoImageView.setVisibility(View.VISIBLE);
                 messengerTextView.setText(everChatMessage.getName());
                 drawable.setColor(Color.WHITE);
-                if (everChatMessage.getPhotoUrl() == null) {
-                    messengerImageView.setImageDrawable(ContextCompat.getDrawable(
-                            ChatAdapter.mContext,
-                            R.drawable.ic_account_circle_black_36dp));
-                } else {
-                    Glide.with(ChatAdapter.mContext)
-                            .load(everChatMessage.getPhotoUrl())
-                            .into(messengerImageView);
-                }
+
+                Glide.with(ChatAdapter.mContext)
+                        .load(everChatMessage.getPhotoUrl())
+                        .into(photoImageView);
             }
-            new AsyncTask<Void, Void, String>() {
-                @Override
-                protected String doInBackground(Void... params) {
-                    String prefDefaultLanguage = mContext.getString(R.string.pref_default_language);
-                    String source = everChatMessage.getLanguage();
-                    String target = PreferenceManager.getDefaultSharedPreferences(mContext).getString(mContext.getString(R.string.pref_language), prefDefaultLanguage);
-                    String message = everChatMessage.getMessage();
-
-                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
-                    boolean isOnTranslate = pref.getBoolean(mContext.getString(R.string.pref_translate), mContext.getResources().getBoolean(R.bool.pref_default_translate));
-
-                    if(isOnTranslate == false || source.equals(target)) {
-//                        Both languages are same.
-                        return message;
-                    }
-                    else if(source.equals(prefDefaultLanguage) || target.equals(prefDefaultLanguage)) {
-//                        At least a language is Korean.
-                        return translateMessage(source, target, message);
-                    } else {
-//                        Both languages are not Korean.
-                        String tmp = translateMessage(source, prefDefaultLanguage, message);
-                        return translateMessage(prefDefaultLanguage, target, tmp);
-                    }
-                }
-
-                @Override
-                protected void onPostExecute(String str) {
-                    messageTextView.setText(str);
-                }
-            }.execute();
         }
 
         private String translateMessage(String source, String target, String message) {
@@ -173,7 +220,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
             int viewId = v.getId();
 
             switch(viewId) {
-                case R.id.im_messenger:
+                case R.id.im_photo:
                     Intent intent = new Intent(mContext, ProfileActivity.class);
                     intent.putExtra(mContext.getString(R.string.profile_selected_uid), uid);
                     mContext.startActivity(intent);

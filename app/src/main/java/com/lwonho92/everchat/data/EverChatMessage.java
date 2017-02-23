@@ -26,6 +26,7 @@ public class EverChatMessage {
     private String name;
     private String photoUrl;
     private String message;
+    private String picture;
     private String language;
     private String uid;
     private Long timestamp;
@@ -33,10 +34,9 @@ public class EverChatMessage {
     public EverChatMessage() {
     }
 
-    public EverChatMessage(String name, String photoUrl, String message, String language, String uid) {
+    public EverChatMessage(String name, String photoUrl, String language, String uid) {
         this.name = name;
         this.photoUrl = photoUrl;
-        this.message = message;
         this.language = language;
         this.uid = uid;
     }
@@ -69,6 +69,13 @@ public class EverChatMessage {
         return message;
     }
 
+    public String getPicture() {
+        return picture;
+    }
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
     public void setLanguage(String language) {
         this.language = language;
     }
@@ -95,6 +102,7 @@ public class EverChatMessage {
         result.put("name", name);
         result.put("photoUrl", photoUrl);
         result.put("message", message);
+        result.put("picture", picture);
         result.put("language", language);
         result.put("uid", uid);
         result.put("timestamp", getTimestamp());
