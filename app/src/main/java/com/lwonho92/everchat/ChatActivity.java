@@ -29,8 +29,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -40,11 +44,13 @@ import com.gun0912.tedpicker.Config;
 import com.gun0912.tedpicker.ImagePickerActivity;
 import com.lwonho92.everchat.adapters.ChatAdapter;
 import com.lwonho92.everchat.data.EverChatMessage;
+import com.lwonho92.everchat.data.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -166,6 +172,34 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
         }
         sendButton.setOnClickListener(this);
         pictureImageButton.setOnClickListener(this);
+
+        databaseReference.child("room_names").child(roomCountry).child(roomId).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                ;
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                ;
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Toast.makeText(ChatActivity.this, "Expire this room.", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                ;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                ;
+            }
+        });
     }
 
     @Override
@@ -242,7 +276,7 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
 
                                     Map<String, Object> childUpdates = new HashMap<>();
                                     childUpdates.put("/messages/" + roomId + "/" + key, postValues);
-                                    childUpdates.put("/room_names/" + roomCountry + "/" + roomId + "/text", "picture");
+                                    childUpdates.put("/room_names/" + roomCountry + "/" + roomId + "/text", "(picture)");
 
                                     databaseReference.updateChildren(childUpdates);
                                 }
@@ -317,19 +351,77 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
                         .check();
                 break;
             case R.id.send_button:
-                String key = databaseReference.child("messages").child(roomId).push().getKey();
-                EverChatMessage everChatMessage = new EverChatMessage(mUsername, mPhotoUrl, prefLanguage, FirebaseAuth.getInstance().getCurrentUser().getUid());
-                everChatMessage.setMessage(editText.getText().toString());
-                Map<String, Object> postValues = everChatMessage.toMap();
+                databaseReference.child("room_names").child(roomCountry).child(roomId).child("timestamp").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Long timestamp = dataSnapshot.getValue(Long.class);
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTimeInMillis(timestamp);
+                        cal.add(Calendar.MINUTE, 10);
 
-                Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put("/messages/" + roomId + "/" + key, postValues);
-                childUpdates.put("/room_names/" + roomCountry + "/" + roomId + "/text", everChatMessage.getMessage());
+                        if(cal.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
+//                            Room made expire life. (Over 10 Minutes)
+                            Map<String, Object> childUpdates = new HashMap<>();
+                            childUpdates.put("/messages/" + roomId, null);
+                            childUpdates.put("/room_names/" + roomCountry + "/" + roomId, null);
+                            databaseReference.updateChildren(childUpdates);
 
-                databaseReference.updateChildren(childUpdates);
-//                databaseReference.child("messages").child(roomId).child(key).setValue(everChatMessage);
+//                            Remove storage pictures.
+                            new AsyncTask<Void, Void, Void>() {
+                                @Override
+                                protected Void doInBackground(Void... params) {
+                                    //do something
+                                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                                    StorageReference storageRef = storage.getReferenceFromUrl("gs://everchat-6ce20.appspot.com");
 
-                editText.setText("");
+                                    StorageReference removeRef = storageRef.child(roomId);
+                                    try {
+//                                        TODO gsutil rm gs://bucket/subdir/**
+//                                        https://cloud.google.com/storage/docs/json_api/v1/objects/list
+//                                        Unfortunately, firebase do not provide delete directory. I'll find solution which issue.
+
+                                        removeRef.delete().addOnSuccessListener(new OnSuccessListener() {
+                                            @Override
+                                            public void onSuccess(Object o) {
+                                                Log.e(TAG, "Remove Room Success");
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception exception) {
+                                                Log.e(TAG, "Remove Room Failure: " + exception.toString());
+                                            }
+                                        });
+                                    } catch(Exception ex) {
+                                        Log.e(TAG, "Remove Exception: " + ex.toString());
+                                    }
+                                    return null;
+                                }
+                            }.execute();
+
+                            Toast.makeText(ChatActivity.this, "Expire this room.", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+//                            Room made still live. (Not Over 10 Minutes)
+                            String key = databaseReference.child("messages").child(roomId).push().getKey();
+                            EverChatMessage everChatMessage = new EverChatMessage(mUsername, mPhotoUrl, prefLanguage, FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            everChatMessage.setMessage(editText.getText().toString());
+                            Map<String, Object> postValues = everChatMessage.toMap();
+
+                            Map<String, Object> childUpdates = new HashMap<>();
+                            childUpdates.put("/messages/" + roomId + "/" + key, postValues);
+                            childUpdates.put("/room_names/" + roomCountry + "/" + roomId + "/text", everChatMessage.getMessage());
+
+                            databaseReference.updateChildren(childUpdates);
+                        }
+
+                        editText.setText("");
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
                 break;
         }
     }

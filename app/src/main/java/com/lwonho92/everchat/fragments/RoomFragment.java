@@ -168,6 +168,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
                             Intent intent = new Intent(getContext(), ChatActivity.class);
                             intent.putExtra(getString(R.string.room_id), roomId);
                             intent.putExtra(getString(R.string.room_name), roomName);
+                            intent.putExtra(getString(R.string.room_country), currentCountry);
                             startActivity(intent);
                         }
                     })
