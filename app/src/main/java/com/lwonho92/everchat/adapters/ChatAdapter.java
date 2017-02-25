@@ -86,6 +86,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
             if(everChatMessage.getMessage() != null) {
 //                for message
                 drawable = (GradientDrawable) messageTextView.getBackground();
+                pictureImageButton.setVisibility(View.GONE);
                 messageTextView.setVisibility(View.VISIBLE);
 
                 new AsyncTask<Void, Void, String>() {
@@ -122,6 +123,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
 //                for picture
                 drawable = (GradientDrawable) pictureImageButton.getBackground();
                 pictureImageButton.setVisibility(View.VISIBLE);
+                messageTextView.setVisibility(View.GONE);
 
                 Glide.with(ChatAdapter.mContext)
                         .load(everChatMessage.getPicture())

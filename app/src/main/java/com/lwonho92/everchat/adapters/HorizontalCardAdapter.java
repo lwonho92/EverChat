@@ -1,6 +1,7 @@
 package com.lwonho92.everchat.adapters;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +20,7 @@ public class HorizontalCardAdapter extends PagerAdapter {
     private Context mContext;
     private LayoutInflater mLayoutInflater;
     private SearchFragment.SelectCountryListener mListener;
-
-    private final int[] drawableCountry = {R.drawable.flag_kr, R.drawable.flag_cn, R.drawable.flag_jp, R.drawable.flag_us};
+    private TypedArray drawables;
     private final String[] fullCountry;
     private final String[] country;
 
@@ -28,16 +28,15 @@ public class HorizontalCardAdapter extends PagerAdapter {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
         mListener = listener;
-//        TypedArray flags = mContext.getResources().obtainTypedArray(R.array.drawable_countries);
-//        drawableCountry = flags.get;
-//        Log.e(TAG, drawableCountry.toString());
+
+        drawables = mContext.getResources().obtainTypedArray(R.array.drawable_countries);
         fullCountry = mContext.getResources().getStringArray(R.array.full_countries);
         country = mContext.getResources().getStringArray(R.array.short_countries);
     }
 
     @Override
     public int getCount() {
-        return drawableCountry.length;
+        return country.length;
     }
 
     @Override
@@ -58,6 +57,7 @@ public class HorizontalCardAdapter extends PagerAdapter {
         });
 
         container.addView(view);
+
         return view;
     }
 
@@ -75,11 +75,14 @@ public class HorizontalCardAdapter extends PagerAdapter {
         ImageView flag = (ImageView) view.findViewById(R.id.im_card_view);
         TextView text = (TextView) view.findViewById(R.id.tv_card_view);
 
-//        Log.e(TAG, drawableCountry[position]+"");
         Glide.with(mContext)
-                .load(drawableCountry[position])
+                .load(drawables.getResourceId(position, -1))
+//                .load(drawableCountry[position])
                 .into(flag);
 //        flag.setImageResource(drawableCountry[position]);
+        if(position == getCount())
+            drawables.recycle();
+
         text.setText(fullCountry[position]);
     }
 }

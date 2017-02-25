@@ -10,9 +10,31 @@
     android:paddingTop="@dimen/activity_vertical_margin"
                 android:background="@color/colorPrimary"
     tools:context="com.lwonho92.everchat.SignInActivity">
+    <ImageView
+        android:id="@+id/im_signin_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/tv_signin_message"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:src="@mipmap/ic_launcher"/>
+    <TextView
+        android:id="@id/tv_signin_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:text="Enjoy chat with foreigner."
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"/>
     <com.google.android.gms.common.SignInButton
         android:id="@+id/signInButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_below="@id/tv_signin_message"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        />
 </RelativeLayout>

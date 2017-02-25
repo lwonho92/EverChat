@@ -23,6 +23,7 @@
 
     <string name="profile_country">Country</string>
     <string name="profile_language">Language</string>
+    <string name="profile_email">Email</string>
     <string name="profile_info">Info</string>
     <string name="profile_stars">Stars</string>
 

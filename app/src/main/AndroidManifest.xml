@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.lwonho92.everchat">
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -15,13 +18,16 @@
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
         <activity
-            android:name=".MainActivity"
-            android:launchMode="singleTop">
+            android:name=".WelcomeActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop"
+            >
         </activity>
         <activity android:name=".SignInActivity"/>
         <activity
@@ -45,7 +51,7 @@
         </activity>
         <activity
             android:name="com.gun0912.tedpicker.ImagePickerActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

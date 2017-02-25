@@ -25,34 +25,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/ab_chat"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:gravity="bottom"
         android:orientation="vertical">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/messageRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/v_chat" />
+            android:layout_above="@+id/v_chat"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
         <View
             android:id="@+id/v_chat"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_margin="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_above="@+id/linearLayout"
             android:background="#dadada"
             />
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_margin="8dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -60,29 +60,44 @@
                 android:id="@+id/ib_picture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:src="@drawable/ic_action_picture"
-                />
+                android:background="@color/colorChatBoardDark" />
 
             <EditText
                 android:id="@+id/messageEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"/>
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/ib_picture"
+                android:layout_toLeftOf="@+id/ib_translate"
+                android:layout_gravity="center_vertical" />
 
             <ImageButton
-                android:id="@+id/ib_translate"
+                android:id="@id/ib_translate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_g_translate_black_48dp"/>
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_toLeftOf="@+id/send_button"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@drawable/ic_g_translate_black_24dp" />
 
             <Button
-                android:id="@+id/send_button"
+                android:id="@id/send_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:enabled="false"
-                android:text="SEND"/>
-        </LinearLayout>
+                android:text="SEND"
+                android:background="@color/colorAccent" />
+        </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

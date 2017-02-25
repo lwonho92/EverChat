@@ -25,10 +25,10 @@
         <item>English</item>
     </string-array>
 
-    <array name="drawable_countries">
+    <integer-array name="drawable_countries">
         <item>@drawable/flag_kr</item>
         <item>@drawable/flag_cn</item>
         <item>@drawable/flag_jp</item>
         <item>@drawable/flag_us</item>
-    </array>
+    </integer-array>
 </resources>

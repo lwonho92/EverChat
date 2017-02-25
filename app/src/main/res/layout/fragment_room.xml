@@ -7,22 +7,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     tools:context="com.lwonho92.everchat.fragments.RoomFragment">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/tv_room_fragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/room"
-            android:textSize="40sp"
-            android:textStyle="bold" />
-
+        <ImageView
+            android:id="@+id/im_room_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            />
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_room"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             />
     </LinearLayout>
 
@@ -30,20 +32,20 @@
         android:id="@+id/fam_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        fab:fab_addButtonColorNormal="@color/colorPrimaryLight"
-        fab:fab_addButtonColorPressed="@color/colorPrimary"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_gravity="top|end"
+        fab:fab_addButtonColorNormal="@color/colorAccent"
+        fab:fab_addButtonColorPressed="@color/colorAccentLight"
         fab:fab_addButtonPlusIconColor="@color/white"
         fab:fab_labelStyle="@style/menu_labels_style"
-        fab:fab_labelsPosition="left">
+        fab:fab_labelsPosition="left"
+        app:fab_expandDirection="down" >
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_homeland"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_colorNormal="@color/colorPrimaryLight"
             fab:fab_title="@string/fab_homeland_label"
             fab:fab_icon="@drawable/ic_home_white_48dp"
             fab:fab_colorPressed="@color/white_pressed"/>
@@ -52,9 +54,9 @@
             android:id="@+id/fab_create_room"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_colorNormal="@color/colorPrimaryLight"
             fab:fab_title="@string/fab_create_room_label"
-            fab:fab_icon="@drawable/ic_action_add_room"
+            fab:fab_icon="@drawable/ic_create_new_folder_white_48dp"
             fab:fab_colorPressed="@color/white_pressed"/>
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>

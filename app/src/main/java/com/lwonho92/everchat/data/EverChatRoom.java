@@ -9,14 +9,17 @@ import com.google.firebase.database.ServerValue;
 public class EverChatRoom {
     private String id;
     private String name;
+    private String roomPhotoUrl;
+
     private String text;
     private Long timestamp;
 
     public EverChatRoom() {}
 
-    public EverChatRoom(String name, String text) {
+    public EverChatRoom(String name, String text, String roomPhotoUrl) {
         this.name = name;
         this.text = text;
+        this.roomPhotoUrl = roomPhotoUrl;
     }
 
     public String getId() {
@@ -31,6 +34,13 @@ public class EverChatRoom {
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRoomPhotoUrl() {
+        return roomPhotoUrl;
+    }
+    public void setRoomPhotoUrl(String roomPhotoUrl) {
+        this.roomPhotoUrl = roomPhotoUrl;
     }
 
     public String getText() {

@@ -32,7 +32,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private String myUid;
 
     ImageView pictureImageView;
-    TextView countryTextView, languageTextView, infoTextView;
+    TextView countryTextView, languageTextView, emailTextView, infoTextView;
     ToggleButton startToggleButton;
 
     DatabaseReference selectedStarsRef;
@@ -55,6 +55,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         pictureImageView = (ImageView) findViewById(R.id.im_profile);
         countryTextView = (TextView) findViewById(R.id.tv_profile_country);
         languageTextView = (TextView) findViewById(R.id.tv_profile_language);
+        emailTextView = (TextView) findViewById(R.id.tv_profile_email);
         infoTextView = (TextView) findViewById(R.id.tv_profile_info);
         startToggleButton = (ToggleButton) findViewById(R.id.tb_profile_stars);
 
@@ -66,10 +67,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 if(stars != null) {
                     if (stars.containsKey(selectedUid)) {
 //                        Selected User like me!
+                        emailTextView.setVisibility(View.VISIBLE);
                         infoTextView.setVisibility(View.VISIBLE);
                         return;
                     }
                 }
+                emailTextView.setVisibility(View.INVISIBLE);
                 infoTextView.setVisibility(View.INVISIBLE);
             }
 
@@ -91,6 +94,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         .into(pictureImageView);
                 countryTextView.setText(everChatProfile.getCountry());
                 languageTextView.setText(everChatProfile.getLanguage());
+                emailTextView.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
                 infoTextView.setText(everChatProfile.getInfo());
 
                 HashMap<String, Boolean> stars = everChatProfile.getStars();

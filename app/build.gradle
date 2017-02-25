@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.firebase.firebase-crash'
 
 android {
     compileSdkVersion 25
@@ -52,6 +53,7 @@ dependencies {
 //    Track User Flows
 //    Monetize with Ads
 //    Report Crashes
+    compile 'com.google.firebase:firebase-crash:10.0.1'
 //    Add Firebase storage.
     compile 'com.google.firebase:firebase-storage:10.0.1'
 

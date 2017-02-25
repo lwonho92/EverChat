@@ -57,20 +57,34 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+    public static boolean isFirst = true;
+    @Override
     public void onResume() {
         super.onResume();
-
-        infiniteCycleViewPager.startAutoScroll(true);
     }
 
     @Override
     public void onPause() {
-        infiniteCycleViewPager.stopAutoScroll();
-
         super.onPause();
     }
 
     public interface SelectCountryListener {
         public void setSelectedCountry(String str);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(infiniteCycleViewPager != null) {
+            if (isVisibleToUser) {
+                infiniteCycleViewPager.startAutoScroll(true);
+            } else {
+                infiniteCycleViewPager.stopAutoScroll();
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.lwonho92.everchat.fragments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -16,9 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.database.DatabaseReference;
@@ -35,7 +38,7 @@ import com.lwonho92.everchat.data.EverChatRoom;
 public class RoomFragment extends Fragment implements View.OnClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "RoomFragment";
 
-    private TextView roomFragmentTextView;
+    private ImageView roomFragmentImageView;
     private FloatingActionsMenu famButton;
     private FloatingActionButton fabHomeland, fabCreateRoom;
     private String home;
@@ -64,16 +67,9 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        roomFragmentTextView = (TextView) getView().findViewById(R.id.tv_room_fragment);
+        roomFragmentImageView = (ImageView) getView().findViewById(R.id.im_room_fragment);
 
         famButton = (FloatingActionsMenu) getView().findViewById(R.id.fam_button);
-        famButton.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus)
-                    famButton.collapse();
-            }
-        });
         fabHomeland = (FloatingActionButton) getView().findViewById(R.id.fab_homeland);
         fabCreateRoom = (FloatingActionButton) getView().findViewById(R.id.fab_create_room);
         fabHomeland.setOnClickListener(this);
@@ -106,12 +102,64 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
         });
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(firebaseRecyclerAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                if (dy > 0) {
+                    famButton.setVisibility(View.INVISIBLE);
+                }
+                else if (dy < 0) {
+                    famButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        String[] arrCountry = getResources().getStringArray(R.array.short_countries);
+        int i;
+        for(i = 0; i < 4; i++) {
+            if(currentCountry.equals(arrCountry[i]))
+                break;
+        }
+
+        TypedArray drawables = getResources().obtainTypedArray(R.array.drawable_countries);
+        Glide.with(getContext())
+                .load(drawables.getResourceId(i, -1))
+                .centerCrop()
+                .into(roomFragmentImageView);
+
+        drawables.recycle();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(famButton != null && !isVisibleToUser) {
+            famButton.collapse();
+        }
     }
 
     public void setCountry(String str) {
         currentCountry = str;
-        if(roomFragmentTextView != null && currentCountry != null)
-            roomFragmentTextView.setText(currentCountry);
+
+        if(roomFragmentImageView == null || currentCountry == null)
+            return;
+
+        String[] arrCountry = getResources().getStringArray(R.array.short_countries);
+        int i;
+        for(i = 0; i < 4; i++) {
+            if(currentCountry.equals(arrCountry[i]))
+                break;
+        }
+
+        TypedArray drawables = getResources().obtainTypedArray(R.array.drawable_countries);
+        Glide.with(getContext())
+                .load(drawables.getResourceId(i, -1))
+                .centerCrop()
+                .into(roomFragmentImageView);
+
+        drawables.recycle();
+//        roomFragmentImageView.setText(currentCountry);
 
         if(firebaseRecyclerAdapter != null)
             firebaseRecyclerAdapter.cleanup();
@@ -163,7 +211,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
                         {
                             String roomId = databaseReference.child(currentCountry).push().getKey();
                             String roomName = roomNameEditText.getText().toString();
-                            databaseReference.child(currentCountry).child(roomId).setValue(new EverChatRoom(roomName, ""));
+                            databaseReference.child(currentCountry).child(roomId).setValue(new EverChatRoom(roomName, "", home));
 
                             Intent intent = new Intent(getContext(), ChatActivity.class);
                             intent.putExtra(getString(R.string.room_id), roomId);
@@ -193,6 +241,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key == getString(R.string.pref_country)) {
             home = sharedPreferences.getString(key, getString(R.string.pref_default_country));
+            currentCountry = home;
         }
         Log.e(TAG, "Change: " + key);
     }

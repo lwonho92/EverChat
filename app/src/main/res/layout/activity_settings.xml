@@ -8,7 +8,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.lwonho92.everchat.SettingsActivity">
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/ab_settings"
         android:layout_width="match_parent"
@@ -25,21 +24,35 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:orientation="vertical">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/im_settings"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="320dp"
-                android:src="@drawable/ic_account_circle_black_36dp"
-                android:background="@color/colorPrimaryLight"/>
+                android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/im_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="280dp"
+                    android:src="@drawable/ic_account_circle_black_36dp"/>
+                <ImageButton
+                    android:id="@+id/btn_picture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:src="@drawable/ic_action_picture"
+                    android:background="@color/colorAccent"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    />
+            </FrameLayout>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -63,9 +76,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:entries="@array/short_languages"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:text="@string/profile_info"/>
             <EditText
                 android:id="@+id/et_info"

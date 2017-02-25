@@ -2,8 +2,11 @@ package com.lwonho92.everchat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -20,11 +23,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -115,6 +123,20 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
         linearLayoutManager.setStackFromEnd(true);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("auth").child(firebaseUser.getUid()).child("photoUrl").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    String url = (String) dataSnapshot.getValue(String.class);
+
+                    mPhotoUrl = url;
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
         firebaseRecyclerAdapter = new ChatAdapter(this,
                 EverChatMessage.class,
@@ -143,7 +165,7 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(firebaseRecyclerAdapter);
 
-        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(30)});
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(40)});
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -186,7 +208,32 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Toast.makeText(ChatActivity.this, "Expire this room.", Toast.LENGTH_SHORT).show();
+                databaseReference.child("room_names").child(roomCountry).child(roomId).removeEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 finish();
             }
 
@@ -202,34 +249,11 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.room, menu);
-        this.menu = menu;
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-
-        switch(itemId) {
-            case R.id.action_translation_on:
-                item.setTitle("Off");
-                return true;
-            case R.id.action_translation_off:
-                item.setTitle("Off");
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     private void getImages() {
         Config config = new Config();
         config.setToolbarTitleRes(R.string.custom_title);
         config.setSelectionMin(1);
-        config.setSelectionLimit(5);
+        config.setSelectionLimit(10);
 
         ImagePickerActivity.setConfig(config);
 
@@ -253,7 +277,7 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
 
                     for (Uri uri : image_uris) {
                         final String key = databaseReference.child("messages").child(roomId).push().getKey();
-                        StorageReference saveRef = storageRef.child(roomId).child(key).child(uri.getLastPathSegment());
+                        StorageReference saveRef = storageRef.child("picture").child(roomId).child(key).child(uri.getLastPathSegment());
                         try {
                             InputStream stream = new FileInputStream(new File(uri.toString()));
                             UploadTask uploadTask = saveRef.putStream(stream);
@@ -266,7 +290,7 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-//                                    Save gs://<bucket>/<roomId>/<messageId>/<file_name>
+//                                    Save gs://<bucket>/picture/<roomId>/<messageId>/<file_name>
                                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                                     Log.e(TAG, "Upload Success: " + downloadUrl.toString());
 
@@ -290,28 +314,6 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
                 }
             }.execute();
         }
-    }
-
-    private Menu menu;
-    private String inBedMenuTitle = "Set to 'In bed'";
-    private String outOfBedMenuTitle = "Set to 'Out of bed'";
-    private boolean inBed = false;
-
-    private void updateMenuTitles() {
-        MenuItem bedMenuItem = menu.findItem(R.id.action_translation_on);
-        if (inBed) {
-            bedMenuItem.setTitle(outOfBedMenuTitle);
-        } else {
-            bedMenuItem.setTitle(inBedMenuTitle);
-        }
-        inBed = !inBed;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-//        updateMenuTitles();
-
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -384,6 +386,7 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
                                             @Override
                                             public void onSuccess(Object o) {
                                                 Log.e(TAG, "Remove Room Success");
+
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override
@@ -396,10 +399,10 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
                                     }
                                     return null;
                                 }
-                            }.execute();
+                            };
+//                                    .execute();
 
                             Toast.makeText(ChatActivity.this, "Expire this room.", Toast.LENGTH_SHORT).show();
-                            finish();
                         } else {
 //                            Room made still live. (Not Over 10 Minutes)
                             String key = databaseReference.child("messages").child(roomId).push().getKey();

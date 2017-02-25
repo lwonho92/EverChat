@@ -1,5 +1,12 @@
 package com.lwonho92.everchat.data;
 
+import android.content.Context;
+import android.content.Intent;
+
+import com.gun0912.tedpicker.Config;
+import com.gun0912.tedpicker.ImagePickerActivity;
+import com.lwonho92.everchat.R;
+
 import java.util.Calendar;
 
 /**

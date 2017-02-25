@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    ProgressDialog progress;
+    private ProgressDialog progress;
 
     private GoogleApiClient googleApiClient;
 
@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
         firebaseUser = firebaseAuth.getCurrentUser();
         if(firebaseUser == null) {
 //            Fail get Current User
+            progress.dismiss();
             startActivity(new Intent(this, SignInActivity.class));
             finish();
         } else {
@@ -116,10 +117,11 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
 
                         setSelectedCountry(everChatProfile.getCountry());
 
-                        progress.dismiss();
+                        if(progress != null)
+                            progress.dismiss();
                     } else {
 //                        profile non - exist
-                        Toast.makeText(MainActivity.this, "non-exist", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "non-exist Auth", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                         startActivity(intent);
                     }
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
     }
 
     private void setupTabIcons() {
-        int[] tabIcons = {R.drawable.ic_question_answer_white_48dp, R.drawable.ic_public_white_48dp, R.drawable.ic_widgets_white_48dp};
+        int[] tabIcons = {R.drawable.room_icon_selector, R.drawable.search_icon_selector, R.drawable.more_icon_selector};
 
         for(int i = 0; i < tabIcons.length; i++) {
             tabLayout.getTabAt(i).setIcon(tabIcons[i]);
