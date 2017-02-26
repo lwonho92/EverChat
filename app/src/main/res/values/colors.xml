@@ -8,10 +8,13 @@
     <color name="navigationBarColor">#000000</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorAccentLight">#FF80AB</color>
+
+    <!--For chat layout-->
     <color name="colorChatBoardLight">#FFF176</color>
     <color name="colorChatBoard">#FFEB3B</color>
     <color name="colorChatBoardDark">#FBC02D</color>
-<!--For Fab-->
+
+    <!--For Fab-->
     <color name="black_semi_transparent">#B2000000</color>
     <color name="white">#fafafa</color>
     <color name="white_pressed">#f1f1f1</color>

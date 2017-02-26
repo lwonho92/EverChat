@@ -64,4 +64,8 @@
     <string name="permission_denied">Permission Denied\n</string>
     <string name="permission_deny_guide">If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]</string>
 
+    <!--SettingsActivity menu title-->
+    <string name="settings_save">Save</string>
+    <string name="settings_cancel">Cancel</string>
+
 </resources>

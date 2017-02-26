@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
@@ -63,7 +64,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
         private TextView messageTextView;
         private ImageButton pictureImageButton;
         private TextView timestampTextView;
-        private String uid;
+        private String sourceMessage, uid;
 
         public ChatAdapterViewHolder(View itemView) {
             super(itemView);
@@ -89,34 +90,44 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
                 pictureImageButton.setVisibility(View.GONE);
                 messageTextView.setVisibility(View.VISIBLE);
 
-                new AsyncTask<Void, Void, String>() {
+                new AsyncTask<Void, Void, Object[]>() {
                     @Override
-                    protected String doInBackground(Void... params) {
+                    protected Object[] doInBackground(Void... params) {
                         String prefDefaultLanguage = mContext.getString(R.string.pref_default_language);
                         String source = everChatMessage.getLanguage();
                         String target = PreferenceManager.getDefaultSharedPreferences(mContext).getString(mContext.getString(R.string.pref_language), prefDefaultLanguage);
-                        String message = everChatMessage.getMessage();
+                        sourceMessage = everChatMessage.getMessage();
+                        Uri uri = Utils.convertSourceMessageToUri(sourceMessage, source, target);
 
                         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
                         boolean isOnTranslate = pref.getBoolean(mContext.getString(R.string.pref_translate), mContext.getResources().getBoolean(R.bool.pref_default_translate));
 
                         if(isOnTranslate == false || source.equals(target)) {
 //                        Both languages are same.
-                            return message;
+                            return new Object[] {uri, sourceMessage};
                         }
                         else if(source.equals(prefDefaultLanguage) || target.equals(prefDefaultLanguage)) {
 //                        At least a language is Korean.
-                            return translateMessage(source, target, message);
+                            return new Object[] {uri, translateMessage(source, target, sourceMessage)};
                         } else {
 //                        Both languages are not Korean.
-                            String tmp = translateMessage(source, prefDefaultLanguage, message);
-                            return translateMessage(prefDefaultLanguage, target, tmp);
+                            String tmp = translateMessage(source, prefDefaultLanguage, sourceMessage);
+                            return new Object[] {uri, translateMessage(prefDefaultLanguage, target, tmp)};
                         }
                     }
 
                     @Override
-                    protected void onPostExecute(String str) {
-                        messageTextView.setText(str);
+                    protected void onPostExecute(final Object objects[]) {
+                        messageTextView.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData((Uri)objects[0]);
+                                mContext.startActivity(intent);
+                                return true;
+                            }
+                        });
+                        messageTextView.setText((String)objects[1]);
                     }
                 }.execute();
             } else if(everChatMessage.getPicture() != null) {

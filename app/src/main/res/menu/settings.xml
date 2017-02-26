@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_apply"
-        android:title="Apply"
-        app:showAsAction="always"
+        android:title="@string/settings_save"
+        app:showAsAction="ifRoom"
         android:orderInCategory="1"
         android:icon="@drawable/ic_action_save"
         />
     <item
         android:id="@+id/action_cancel"
-        android:title="Cancel"
-        app:showAsAction="always"
+        android:title="@string/settings_cancel"
+        app:showAsAction="ifRoom"
         android:orderInCategory="2"
         android:icon="@drawable/ic_navigation_close_name"
         />

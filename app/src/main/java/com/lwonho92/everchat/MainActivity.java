@@ -115,7 +115,8 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
                         editor.putString(getString(R.string.pref_language), everChatProfile.getLanguage());
                         editor.commit();
 
-                        setSelectedCountry(everChatProfile.getCountry());
+                        RoomFragment roomFragment = (RoomFragment)adapter.getItem(0);
+                        roomFragment.setCountry(everChatProfile.getCountry());
 
                         if(progress != null)
                             progress.dismiss();
