@@ -1,17 +1,21 @@
-Stellar by HTML5 UP
+Landed by HTML5 UP
 html5up.net | @ajlkn
 Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 
 
-Say hello to Stellar, a slick little one-pager with a super vibrant color palette (which
-I guess you can always tone down if it's a little too vibrant for you), a "sticky" in-page
-nav bar (powered by my Scrollex plugin), a separate generic page template (just in case
-you need one), and an assortment of pre-styled elements.
+A dark, slick, modern, responsive, adjective-drenched design built around an extremely
+dynamic landing page (scroll that mofo!). Inspired by Big Picture, another design
+of mine with a similarish feel/flow, only this time I took it waaaaaay further and
+actually made it multipurpose (versus copping out and making it a one pager like I
+did last time ;) Includes multiple pages, a bunch of pre-styled elements, and all
+its Sass sources.
 
 Demo images* courtesy of Unsplash, a radtastic collection of CC0 (public domain) images
 you can use for pretty much whatever.
 
-(* = not included)
+(* = Not included)
+
+Feedback, bug reports, and comments are not only welcome, but strongly encouraged :)
 
 AJ
 aj@lkn.io | @ajlkn
@@ -30,5 +34,4 @@ Credits:
 		html5shiv.js (@afarkas @jdalton @jon_neal @rem)
 		CSS3 Pie (css3pie.com)
 		Respond.js (j.mp/respondjs)
-		Scrollex (@ajlkn)
 		Skel (skel.io)
