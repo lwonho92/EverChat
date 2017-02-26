@@ -4,30 +4,98 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
     tools:context="com.lwonho92.everchat.fragments.MoreFragment">
     <LinearLayout
+        android:id="@+id/section1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical" >
         <TextView
-        android:id="@+id/tv_more_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:gravity="center_horizontal"
-        android:text="@string/more"
-        android:textSize="40sp"
-        android:textStyle="bold" />
-        <Button
-            android:id="@+id/bt_settings"
+            android:id="@+id/tv_more_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:padding="16dp"
-            android:text="Settings"
-            android:textSize="24sp" />
+            android:padding="@dimen/activity_vertical_padding"
+            android:gravity="center_horizontal"
+            android:background="@color/colorPrimaryLight"
+            android:text="@string/more"
+            android:textSize="40sp" />
+
+        <LinearLayout
+            android:id="@+id/section_setting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:minHeight="200dp"
+            android:padding="20dp"
+            android:orientation="vertical" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:orientation="horizontal">
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:id="@+id/bt_settings"
+                    android:layout_width="@dimen/more_fragment_icon"
+                    android:layout_height="@dimen/more_fragment_icon"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:padding="10dp"
+                    fancy:fb_defaultColor="#888888"
+                    fancy:fb_iconPaddingLeft="0dp"
+                    fancy:fb_iconPaddingRight="0dp"
+                    fancy:fb_focusColor="#313131"
+                    fancy:fb_iconResource="@drawable/settings"
+                    fancy:fb_radius="64dp" >
+                </mehdi.sakout.fancybuttons.FancyButton>
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:id="@+id/bt_copy_right"
+                    android:layout_width="@dimen/more_fragment_icon"
+                    android:layout_height="@dimen/more_fragment_icon"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:padding="10dp"
+                    fancy:fb_defaultColor="#ff8800"
+                    fancy:fb_iconPaddingLeft="0dp"
+                    fancy:fb_iconPaddingRight="0dp"
+                    fancy:fb_focusColor="#313131"
+                    android:fadingEdgeLength="3dp"
+                    fancy:fb_iconResource="@drawable/copy_right"
+                    fancy:fb_radius="64dp">
+                </mehdi.sakout.fancybuttons.FancyButton>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:orientation="horizontal">
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:id="@+id/bt_contact"
+                    android:layout_width="@dimen/more_fragment_icon"
+                    android:layout_height="@dimen/more_fragment_icon"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:padding="10dp"
+                    fancy:fb_defaultColor="#ff6d5b"
+                    fancy:fb_iconPaddingLeft="0dp"
+                    fancy:fb_iconPaddingRight="0dp"
+                    fancy:fb_focusColor="#313131"
+                    fancy:fb_iconResource="@drawable/gmail"
+                    fancy:fb_radius="64dp">
+                </mehdi.sakout.fancybuttons.FancyButton>
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:id="@+id/bt_github"
+                    android:layout_width="@dimen/more_fragment_icon"
+                    android:layout_height="@dimen/more_fragment_icon"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:padding="10dp"
+                    fancy:fb_defaultColor="#777777"
+                    fancy:fb_iconPaddingLeft="0dp"
+                    fancy:fb_iconPaddingRight="0dp"
+                    fancy:fb_focusColor="#777777"
+                    fancy:fb_iconResource="@drawable/github"
+                    fancy:fb_radius="64dp" >
+                </mehdi.sakout.fancybuttons.FancyButton>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

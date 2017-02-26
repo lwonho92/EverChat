@@ -15,6 +15,8 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Calendar;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
 /**
  * Created by GIGAMOLE on 8/18/16.
  */
@@ -55,5 +57,13 @@ public class Utils {
                 .appendPath(sourceMessage);
 
         return builder.build();
+    }
+
+    public static void setCalligraphyConfig(Context context) {
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath(context.getString(R.string.font_style))
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
     }
 }

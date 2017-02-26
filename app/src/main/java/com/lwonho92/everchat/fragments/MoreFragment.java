@@ -1,6 +1,7 @@
 package com.lwonho92.everchat.fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,18 +11,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.lwonho92.everchat.R;
 import com.lwonho92.everchat.SettingsActivity;
+
+import mehdi.sakout.fancybuttons.FancyButton;
 
 /**
  * Created by MY on 2017-02-14.
  */
 
 public class MoreFragment extends Fragment implements View.OnClickListener {
-    Button settingsButton;
-    ImageView settingsImageView;
+    FancyButton settingsButton, copyrightButton, contactButton, githubButton;
 
     public MoreFragment() {}
     @Override
@@ -37,13 +40,14 @@ public class MoreFragment extends Fragment implements View.OnClickListener {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        settingsButton = (Button) getView().findViewById(R.id.bt_settings);
+        settingsButton = (FancyButton) getView().findViewById(R.id.bt_settings);
+        copyrightButton = (FancyButton) getView().findViewById(R.id.bt_copy_right);
+        contactButton = (FancyButton) getView().findViewById(R.id.bt_contact);
+        githubButton = (FancyButton) getView().findViewById(R.id.bt_github);
         settingsButton.setOnClickListener(this);
-        settingsImageView = (ImageView) getView().findViewById(R.id.im_settings);
-//        (TEST) Load image that stored in Firebase Storage with URL.
-        /*Glide.with(getContext())
-                .load("https://firebasestorage.googleapis.com/v0/b/everchat-6ce20.appspot.com/o/mountains.png?alt=media&token=a8fe05ef-2c9f-43ff-ab6c-643f11e4771e")
-                .into(settingsImageView);*/
+        copyrightButton.setOnClickListener(this);
+        contactButton.setOnClickListener(this);
+        githubButton.setOnClickListener(this);
     }
 
     @Override
@@ -52,8 +56,21 @@ public class MoreFragment extends Fragment implements View.OnClickListener {
 
         switch(id) {
             case R.id.bt_settings:
-                Intent intent = new Intent(getContext(), SettingsActivity.class);
-                startActivity(intent);
+                Intent settingIntent = new Intent(getContext(), SettingsActivity.class);
+                startActivity(settingIntent);
+                break;
+            case R.id.bt_copy_right:
+                Toast.makeText(getView().getContext(), "Copy Right is soon", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.bt_contact:
+                Uri contactUri = Uri.parse("mailto:lwonho92@gmail.com");
+                Intent contactIntent = new Intent(Intent.ACTION_SENDTO, contactUri);
+                startActivity(contactIntent);
+                break;
+            case R.id.bt_github:
+                Uri githubUri = Uri.parse("http://github.com/lwonho92");
+                Intent githubIntent = new Intent(Intent.ACTION_VIEW, githubUri);
+                startActivity(githubIntent);
                 break;
         }
     }

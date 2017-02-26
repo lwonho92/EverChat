@@ -1,6 +1,7 @@
 package com.lwonho92.everchat;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -11,14 +12,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -42,6 +47,7 @@ import com.gun0912.tedpermission.TedPermission;
 import com.gun0912.tedpicker.Config;
 import com.gun0912.tedpicker.ImagePickerActivity;
 import com.lwonho92.everchat.data.EverChatProfile;
+import com.lwonho92.everchat.data.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,6 +55,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SettingsActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, PermissionListener {
     private static final String TAG = "SettingsActivity";
@@ -70,11 +78,15 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
     EverChatProfile everChatProfile;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);*/
         setContentView(R.layout.activity_settings);
+        Utils.setCalligraphyConfig(this);
 
         toolbar = (Toolbar) findViewById(R.id.tb_settings);
         setSupportActionBar(toolbar);
@@ -84,6 +96,43 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
         pictureImageButton = (ImageButton) findViewById(R.id.btn_picture);
         countrySpinner = (Spinner) findViewById(R.id.sp_country);
         languageSpinner = (Spinner) findViewById(R.id.sp_language);
+
+        countrySpinner.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_style, getResources().getStringArray(R.array.short_countries)) {
+            public View getView(int position, View convertView,ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                ((TextView) v).setGravity(Gravity.RIGHT);
+                ((TextView) v).setGravity(Gravity.END);
+                ((TextView) v).setTextSize(28);
+
+                return v;
+            }
+            public View getDropDownView(int position, View convertView,ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView,parent);
+                ((TextView) v).setGravity(Gravity.RIGHT);
+                ((TextView) v).setGravity(Gravity.END);
+                ((TextView) v).setTextSize(28);
+
+                return v;
+            }
+        });
+        languageSpinner.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_style, getResources().getStringArray(R.array.short_languages)) {
+            public View getView(int position, View convertView,ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                ((TextView) v).setGravity(Gravity.RIGHT);
+                ((TextView) v).setGravity(Gravity.END);
+                ((TextView) v).setTextSize(28);
+
+                return v;
+            }
+            public View getDropDownView(int position, View convertView,ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView,parent);
+                ((TextView) v).setGravity(Gravity.RIGHT);
+                ((TextView) v).setGravity(Gravity.END);
+                ((TextView) v).setTextSize(28);
+
+                return v;
+            }
+        });
         profileEditText = (EditText) findViewById(R.id.et_info);
 
         googleApiClient = new GoogleApiClient.Builder(this)

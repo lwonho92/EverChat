@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 
 import com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager;
+import com.gigamole.infinitecycleviewpager.VerticalInfiniteCycleViewPager;
 import com.lwonho92.everchat.R;
 import com.lwonho92.everchat.adapters.HorizontalCardAdapter;
 
@@ -21,7 +22,7 @@ public class SearchFragment extends Fragment {
     private static final String TAG = "SearchFragment";
     SelectCountryListener mListener;
 
-    private HorizontalInfiniteCycleViewPager infiniteCycleViewPager;
+    private VerticalInfiniteCycleViewPager infiniteCycleViewPager;
 
     public SearchFragment() {}
 
@@ -49,11 +50,9 @@ public class SearchFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
 //        ViewPagerAdapter
-        infiniteCycleViewPager = (HorizontalInfiniteCycleViewPager) getView().findViewById(R.id.hicvp);
+        infiniteCycleViewPager = (VerticalInfiniteCycleViewPager) getView().findViewById(R.id.hicvp);
         infiniteCycleViewPager.setAdapter(new HorizontalCardAdapter(getContext(), mListener));
-        infiniteCycleViewPager.setInterpolator(
-                AnimationUtils.loadInterpolator(getContext(), android.R.anim.overshoot_interpolator)
-        );
+
     }
 
     @Override
@@ -81,7 +80,7 @@ public class SearchFragment extends Fragment {
 
         if(infiniteCycleViewPager != null) {
             if (isVisibleToUser) {
-                infiniteCycleViewPager.startAutoScroll(true);
+                infiniteCycleViewPager.startAutoScroll(false);
             } else {
                 infiniteCycleViewPager.stopAutoScroll();
             }

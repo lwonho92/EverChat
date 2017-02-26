@@ -64,8 +64,15 @@
     <string name="permission_denied">Permission Denied\n</string>
     <string name="permission_deny_guide">If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]</string>
 
+    <!--Font style-->
+    <string name="font_style">fonts/NanumBarunGothicBold.ttf</string>
+
     <!--SettingsActivity menu title-->
     <string name="settings_save">Save</string>
     <string name="settings_cancel">Cancel</string>
+
+    <!--More Fragment text-->
+    <string name="more_settings_button">Settings</string>
+    <string name="more_copyright_button">Copy Rights</string>
 
 </resources>

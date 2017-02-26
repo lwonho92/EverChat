@@ -1,5 +1,6 @@
 package com.lwonho92.everchat;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,8 +21,12 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.lwonho92.everchat.data.EverChatProfile;
+import com.lwonho92.everchat.data.Utils;
 
 import java.util.HashMap;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "ProfileActivity";
@@ -38,9 +43,15 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     DatabaseReference selectedStarsRef;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        Utils.setCalligraphyConfig(this);
 
         toolbar = (Toolbar) findViewById(R.id.tb_profile);
         setSupportActionBar(toolbar);

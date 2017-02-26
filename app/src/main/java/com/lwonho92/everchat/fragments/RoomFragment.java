@@ -211,7 +211,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
                         {
                             String roomId = databaseReference.child(currentCountry).push().getKey();
                             String roomName = roomNameEditText.getText().toString();
-                            databaseReference.child(currentCountry).child(roomId).setValue(new EverChatRoom(roomName, "", home));
+                            databaseReference.child(currentCountry).child(roomId).setValue(new EverChatRoom(roomName.substring(0, 10) + " ...", "", home));
 
                             Intent intent = new Intent(getContext(), ChatActivity.class);
                             intent.putExtra(getString(R.string.room_id), roomId);

@@ -3,6 +3,7 @@ package com.lwonho92.everchat;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -62,6 +63,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class ChatActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, PermissionListener {
     private static final String TAG = "ChatActivity";
     private static final int INTENT_REQUEST_GET_IMAGES = 13;
@@ -91,9 +95,16 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
     private ChatAdapter firebaseRecyclerAdapter;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        Utils.setCalligraphyConfig(this);
 
         toolbar = (Toolbar) findViewById(R.id.tb_chat);
         setSupportActionBar(toolbar);

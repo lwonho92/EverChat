@@ -1,6 +1,7 @@
 package com.lwonho92.everchat;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,9 +34,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lwonho92.everchat.data.EverChatProfile;
+import com.lwonho92.everchat.data.Utils;
 import com.lwonho92.everchat.fragments.RoomFragment;
 import com.lwonho92.everchat.fragments.SearchFragment;
 import com.lwonho92.everchat.fragments.MoreFragment;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity implements SearchFragment.SelectCountryListener, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "MainActivity";
@@ -53,9 +58,17 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
     public ViewPagerAdapter adapter;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+//        super.attachBaseContext(newBase);
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Utils.setCalligraphyConfig(this);
 
         progress = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.progress_message), true, true);
         progress.setProgressStyle(android.R.style.Theme_Black_NoTitleBar_Fullscreen);
