@@ -23,19 +23,25 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.lwonho92.everchat.data.Utils;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class SignInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class SignInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "SignInActivity";
     private static final int SIGN_IN_CODE = 1004;
-
 //    Google instance variables
     private GoogleApiClient googleApiClient;
-    private SignInButton signInButton;
 
 //    Firebase instance variables
     private FirebaseAuth firebaseAuth;
+
+    @OnClick(R.id.signinButton)
+    public void onClick() {
+        Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+        startActivityForResult(intent, SIGN_IN_CODE);
+    }
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -46,11 +52,9 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+        ButterKnife.bind(this);
 
         Utils.setCalligraphyConfig(this);
-
-        signInButton = (SignInButton) findViewById(R.id.signInButton);
-        signInButton.setOnClickListener(this);
 
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -62,18 +66,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 .build();
 
         firebaseAuth = FirebaseAuth.getInstance();
-    }
-
-    @Override
-    public void onClick(View v) {
-        int selectedId = v.getId();
-
-        switch(selectedId) {
-            case R.id.signInButton:
-                Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(intent, SIGN_IN_CODE);
-                break;
-        }
     }
 
     @Override

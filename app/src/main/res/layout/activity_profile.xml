@@ -3,13 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.lwonho92.everchat.ProfileActivity">
+
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/ab_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -37,14 +36,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/im_profile"
+                    android:id="@+id/im_profile_photo"
                     android:layout_width="match_parent"
                     android:layout_height="280dp"
                     android:src="@drawable/ic_account_circle_black_36dp" />
                 <ToggleButton
                     tools:context="uk.co.chrisjenx.calligraphy.sample.PlaceholderFragment"
                     tools:ignore="MissingPrefix"
-                    android:id="@+id/tb_profile_stars"
+                    android:id="@+id/tb_profile_heart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"

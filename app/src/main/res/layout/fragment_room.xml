@@ -13,12 +13,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <ImageView
-            android:id="@+id/im_room_fragment"
+            android:id="@+id/im_room_list_label"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             />
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_room"
+            android:id="@+id/rv_room_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"

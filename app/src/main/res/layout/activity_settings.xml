@@ -8,8 +8,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.lwonho92.everchat.SettingsActivity">
+
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/ab_settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -19,8 +19,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-        </android.support.v7.widget.Toolbar>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
@@ -38,12 +37,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/im_settings"
+                    android:id="@+id/im_settings_photo"
                     android:layout_width="match_parent"
                     android:layout_height="280dp"
                     android:src="@drawable/ic_account_circle_black_36dp"/>
                 <ImageButton
-                    android:id="@+id/btn_picture"
+                    android:id="@+id/bt_settings_picture"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
@@ -61,7 +60,7 @@
                 android:text="@string/profile_country"
                 android:textSize="@dimen/profile_label_size" />
             <Spinner
-                android:id="@+id/sp_country"
+                android:id="@+id/sp_settings_country"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/profile_data_bottom_margin"
@@ -76,7 +75,7 @@
                 android:text="@string/profile_language"
                 android:textSize="@dimen/profile_label_size" />
             <Spinner
-                android:id="@+id/sp_language"
+                android:id="@+id/sp_settings_language"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/profile_data_bottom_margin"
@@ -90,7 +89,7 @@
                 android:text="@string/profile_info"
                 android:textSize="@dimen/profile_label_size" />
             <EditText
-                android:id="@+id/et_info"
+                android:id="@+id/et_settings_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/profile_data_bottom_margin"

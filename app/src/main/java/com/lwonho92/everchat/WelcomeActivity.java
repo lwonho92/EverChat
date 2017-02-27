@@ -1,6 +1,5 @@
 package com.lwonho92.everchat;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -9,11 +8,10 @@ import android.os.Bundle;
 
 import com.lwonho92.everchat.data.Utils;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class WelcomeActivity extends AppCompatActivity {
-    private static int SPLASH_TIME_OUT = 2000;
+    private static int TIME_OUT = 2000;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -35,6 +33,6 @@ public class WelcomeActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, SPLASH_TIME_OUT);
+        }, TIME_OUT);
     }
 }

@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -54,28 +53,36 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class SettingsActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, PermissionListener {
+public class SettingsActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, PermissionListener {
     private static final String TAG = "SettingsActivity";
     private static final int INTENT_REQUEST_GET_IMAGES = 14;
     private Toolbar toolbar;
 
-    FirebaseAuth firebaseAuth;
-    FirebaseUser firebaseUser;
-    Uri photoUri;
-    DatabaseReference databaseReference;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
+    private Uri photoUri;
+    private DatabaseReference databaseReference;
 
-    private GoogleApiClient googleApiClient;
+    private EverChatProfile everChatProfile;
 
-    ImageView pictureImageView;
-    ImageButton pictureImageButton;
-    Spinner countrySpinner, languageSpinner;
-    EditText profileEditText;
-
-    EverChatProfile everChatProfile;
+    @BindView(R.id.im_settings_photo) ImageView pictureImageView;
+    @OnClick(R.id.bt_settings_picture)
+    public void onClick() {
+        new TedPermission(this)
+                .setPermissionListener(this)
+                .setDeniedMessage(getString(R.string.permission_deny_guide))
+                .setPermissions(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA)
+                .check();
+    }
+    @BindView(R.id.sp_settings_country) Spinner countrySpinner;
+    @BindView(R.id.sp_settings_language) Spinner languageSpinner;
+    @BindView(R.id.et_settings_info) EditText profileEditText;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -86,19 +93,16 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        ButterKnife.bind(this);
+
         Utils.setCalligraphyConfig(this);
 
         toolbar = (Toolbar) findViewById(R.id.tb_settings);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        pictureImageView = (CircleImageView) findViewById(R.id.im_settings);
-        pictureImageButton = (ImageButton) findViewById(R.id.btn_picture);
-        countrySpinner = (Spinner) findViewById(R.id.sp_country);
-        languageSpinner = (Spinner) findViewById(R.id.sp_language);
-
         countrySpinner.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_style, getResources().getStringArray(R.array.short_countries)) {
-            public View getView(int position, View convertView,ViewGroup parent) {
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
                 ((TextView) v).setGravity(Gravity.RIGHT);
                 ((TextView) v).setGravity(Gravity.END);
@@ -106,7 +110,7 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
 
                 return v;
             }
-            public View getDropDownView(int position, View convertView,ViewGroup parent) {
+            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView,parent);
                 ((TextView) v).setGravity(Gravity.RIGHT);
                 ((TextView) v).setGravity(Gravity.END);
@@ -116,7 +120,7 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
             }
         });
         languageSpinner.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_style, getResources().getStringArray(R.array.short_languages)) {
-            public View getView(int position, View convertView,ViewGroup parent) {
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
                 ((TextView) v).setGravity(Gravity.RIGHT);
                 ((TextView) v).setGravity(Gravity.END);
@@ -124,7 +128,7 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
 
                 return v;
             }
-            public View getDropDownView(int position, View convertView,ViewGroup parent) {
+            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView,parent);
                 ((TextView) v).setGravity(Gravity.RIGHT);
                 ((TextView) v).setGravity(Gravity.END);
@@ -133,12 +137,6 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
                 return v;
             }
         });
-        profileEditText = (EditText) findViewById(R.id.et_info);
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API)
-                .build();
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -185,8 +183,6 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
 
             }
         });
-
-        pictureImageButton.setOnClickListener(this);
     }
 
     @Override
@@ -214,7 +210,6 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
 
                     @Override
                     protected Boolean doInBackground(Uri... params) {
-                        //do something
                         Uri uri = params[0];
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReferenceFromUrl("gs://everchat-6ce20.appspot.com");
@@ -238,9 +233,9 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
                                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
 //                                    Save gs://<bucket>/profile/<uId>.<extension>
                                         final Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                        Log.e(TAG, "Upload Success: " + downloadUrl.toString());
 
-                                        databaseReference.child("photoUrl").setValue(downloadUrl.toString());
+                                        if(downloadUrl != null)
+                                            databaseReference.child("photoUrl").setValue(downloadUrl.toString());
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -258,7 +253,7 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
 
                     @Override
                     protected void onPostExecute(Boolean isPhotoChanged) {
-                        if(isPhotoChanged) {
+                        if(isPhotoChanged && firebaseUser.getPhotoUrl() != null) {
                             databaseReference.child("photoUrl").setValue(firebaseUser.getPhotoUrl().toString());
                         }
                     }
@@ -283,21 +278,6 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
         Log.d(TAG, "Called onConnectionFailed:" + connectionResult);
     }
 
-    @Override
-    public void onClick(View v) {
-        int viewId = v.getId();
-
-        switch(viewId) {
-            case R.id.btn_picture:
-                new TedPermission(this)
-                        .setPermissionListener(this)
-                        .setDeniedMessage(getString(R.string.permission_deny_guide))
-                        .setPermissions(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA)
-                        .check();
-            break;
-        }
-    }
-
     private void getImages() {
         Config config = new Config();
         config.setToolbarTitleRes(R.string.custom_title);
@@ -307,23 +287,27 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
         ImagePickerActivity.setConfig(config);
 
         Intent intent  = new Intent(this, ImagePickerActivity.class);
-        startActivityForResult(intent,INTENT_REQUEST_GET_IMAGES);
+        startActivityForResult(intent, INTENT_REQUEST_GET_IMAGES);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        if (requestCode == INTENT_REQUEST_GET_IMAGES && resultCode == Activity.RESULT_OK ) {
-            final ArrayList<Uri> image_uris = intent.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
-            photoUri = image_uris.get(0);
-            Glide.with(SettingsActivity.this)
-                    .load(photoUri.toString())
-                    .into(pictureImageView);
+        if (resultCode == Activity.RESULT_OK ) {
+            switch(requestCode) {
+                case INTENT_REQUEST_GET_IMAGES:
+                    final ArrayList<Uri> image_uris = intent.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
+                    photoUri = image_uris.get(0);
+                    Glide.with(SettingsActivity.this)
+                            .load(photoUri.toString())
+                            .into(pictureImageView);
+                    break;
+            }
         }
     }
 
-            @Override
+    @Override
     public void onPermissionGranted() {
         Toast.makeText(SettingsActivity.this, getString(R.string.permission_granted), Toast.LENGTH_SHORT).show();
         getImages();

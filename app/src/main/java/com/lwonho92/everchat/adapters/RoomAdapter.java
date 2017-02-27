@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,8 +16,8 @@ import com.lwonho92.everchat.ChatActivity;
 import com.lwonho92.everchat.R;
 import com.lwonho92.everchat.data.EverChatRoom;
 
-import org.w3c.dom.Text;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -28,19 +29,15 @@ public class RoomAdapter extends FirebaseRecyclerAdapter<EverChatRoom, RoomAdapt
     private static String country;
 
     public static class RoomAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-//        CircleImageView
-        private CircleImageView roomPhotoImageView;
-        private TextView roomNameTextView;
-        private TextView messageTextView;
+        @BindView(R.id.im_room_photo) CircleImageView roomPhotoImageView;
+        @BindView(R.id.tv_room_name) TextView roomNameTextView;
+        @BindView(R.id.tv_last_message) TextView messageTextView;
 
         public String id;
 
         public RoomAdapterViewHolder(View itemView) {
             super(itemView);
-
-            roomPhotoImageView = (CircleImageView) itemView.findViewById(R.id.im_room_photo);
-            roomNameTextView = (TextView) itemView.findViewById(R.id.last_messengerTextView);
-            messageTextView = (TextView) itemView.findViewById(R.id.last_messageTextView);
+            ButterKnife.bind(this, itemView);
 
             itemView.setOnClickListener(this);
         }
@@ -80,7 +77,6 @@ public class RoomAdapter extends FirebaseRecyclerAdapter<EverChatRoom, RoomAdapt
                     intent.putExtra(mContext.getString(R.string.room_country), country);
                     intent.putExtra(mContext.getString(R.string.room_name), roomNameTextView.getText().toString());
                     mContext.startActivity(intent);
-//                    Toast.makeText(mContext, id.toString(), Toast.LENGTH_LONG).show();
                     break;
             }
         }
@@ -98,6 +94,8 @@ public class RoomAdapter extends FirebaseRecyclerAdapter<EverChatRoom, RoomAdapt
         EverChatRoom everChatRoom = super.parseSnapshot(snapshot);
         if(everChatRoom != null) {
             everChatRoom.setId(snapshot.getKey());
+        } else {
+            Log.e("check", "hello");
         }
         return everChatRoom;
     }
@@ -105,8 +103,6 @@ public class RoomAdapter extends FirebaseRecyclerAdapter<EverChatRoom, RoomAdapt
     @Override
     protected void populateViewHolder(RoomAdapterViewHolder viewHolder, EverChatRoom everChatRoom, int position) {
         viewHolder.bind(everChatRoom);
-//        write this message to the on-device index
-        /*FirebaseAppIndex.getInstance().update(getMessageIndexable(everChatMessage));
-        FirebaseUserActions.getInstance().end(getMessageViewAction(everChatMessage));*/
     }
+
 }

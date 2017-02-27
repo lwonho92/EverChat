@@ -10,7 +10,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -43,6 +42,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -57,26 +59,18 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
     private static Context mContext;
     private final static String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-    public static class ChatAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        LinearLayout linearLayout;
-        private CircleImageView photoImageView;
-        private TextView messengerTextView;
-        private TextView messageTextView;
-        private ImageButton pictureImageButton;
-        private TextView timestampTextView;
+    public static class ChatAdapterViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.ll_message) LinearLayout linearLayout;
+        @BindView(R.id.im_message_photo) CircleImageView photoImageView;
+        @BindView(R.id.tv_messenger) TextView messengerTextView;
+        @BindView(R.id.tv_message) TextView messageTextView;
+        @BindView(R.id.ib_send_picture) ImageButton pictureImageButton;
+        @BindView(R.id.tv_timestamp) TextView timestampTextView;
         private String sourceMessage, uid;
 
         public ChatAdapterViewHolder(View itemView) {
             super(itemView);
-
-            linearLayout = (LinearLayout) itemView.findViewById(R.id.ll_message);
-            photoImageView = (CircleImageView) itemView.findViewById(R.id.im_photo);
-            messengerTextView = (TextView) itemView.findViewById(R.id.tv_messenger);
-            messageTextView = (TextView) itemView.findViewById(R.id.tv_message);
-            pictureImageButton = (ImageButton) itemView.findViewById(R.id.ib_picture);
-            timestampTextView = (TextView) itemView.findViewById(R.id.tv_timestamp);
-
-            photoImageView.setOnClickListener(this);
+            ButterKnife.bind(this, itemView);
         }
 
         public void bind(final EverChatMessage everChatMessage, int type) {
@@ -102,7 +96,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
                         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
                         boolean isOnTranslate = pref.getBoolean(mContext.getString(R.string.pref_translate), mContext.getResources().getBoolean(R.bool.pref_default_translate));
 
-                        if(isOnTranslate == false || source.equals(target)) {
+                        if(!isOnTranslate || source.equals(target)) {
 //                        Both languages are same.
                             return new Object[] {uri, sourceMessage};
                         }
@@ -227,18 +221,11 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
             return "";
         }
 
-        @Override
-        public void onClick(View v) {
-//            int adapterPosition = getAdapterPosition();
-            int viewId = v.getId();
-
-            switch(viewId) {
-                case R.id.im_photo:
-                    Intent intent = new Intent(mContext, ProfileActivity.class);
-                    intent.putExtra(mContext.getString(R.string.profile_selected_uid), uid);
-                    mContext.startActivity(intent);
-                    break;
-            }
+        @OnClick(R.id.ib_send_picture)
+        public void onClick() {
+            Intent intent = new Intent(mContext, ProfileActivity.class);
+            intent.putExtra(mContext.getString(R.string.profile_selected_uid), uid);
+            mContext.startActivity(intent);
         }
     }
 
@@ -265,7 +252,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
 //            My message
             return 0;
         else
-//        Others message
+//            Others message
             return 1;
     }
 
@@ -274,9 +261,6 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
         int type = getItemViewType(position);
 
         viewHolder.bind(everChatMessage, type);
-//        write this message to the on-device index
-        /*FirebaseAppIndex.getInstance().update(getMessageIndexable(everChatMessage));
-        FirebaseUserActions.getInstance().end(getMessageViewAction(everChatMessage));*/
     }
 
     @Override

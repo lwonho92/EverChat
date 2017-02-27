@@ -16,4 +16,6 @@
     <dimen name="profile_data_bottom_margin">20dp</dimen>
 
     <dimen name="more_fragment_icon">128dp</dimen>
+
+    <dimen name="license_text_size">24sp</dimen>
 </resources>

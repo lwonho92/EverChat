@@ -54,11 +54,7 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:10.0.1'
     //    Add Message to the On-device Index
     compile 'com.firebaseui:firebase-ui-database:0.4.0'
-//    Receive Reengagement Notifications
-//    Remotely Configure Friendly Message Length
-//    Send Install Invites
-//    Track User Flows
-//    Monetize with Ads
+
 //    Report Crashes
     compile 'com.google.firebase:firebase-crash:10.0.1'
 //    Add Firebase storage.
@@ -75,6 +71,10 @@ dependencies {
 
 //    After android marshmallow, grant permission.
     compile 'gun0912.ted:tedpermission:1.0.3'
+
+//    Butter knife
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 
     testCompile 'junit:junit:4.12'
 }

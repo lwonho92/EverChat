@@ -78,9 +78,6 @@ public class EverChatProfile {
         return stars;
     }
 
-    /*public void setStars() {
-        this.stars = new HashMap<>();
-    }*/
     public void setStars(HashMap<String, Boolean> stars) {
         this.stars = stars;
     }
@@ -96,10 +93,4 @@ public class EverChatProfile {
         result.put("stars", stars);
         return result;
     }
-
-    /*public Map<String, Object> toStarsMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("stars", stars);
-        return result;
-    }*/
 }

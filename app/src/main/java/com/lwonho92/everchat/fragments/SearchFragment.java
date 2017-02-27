@@ -7,12 +7,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 
-import com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager;
 import com.gigamole.infinitecycleviewpager.VerticalInfiniteCycleViewPager;
 import com.lwonho92.everchat.R;
 import com.lwonho92.everchat.adapters.HorizontalCardAdapter;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by MY on 2017-02-14.
@@ -22,7 +23,7 @@ public class SearchFragment extends Fragment {
     private static final String TAG = "SearchFragment";
     SelectCountryListener mListener;
 
-    private VerticalInfiniteCycleViewPager infiniteCycleViewPager;
+    @BindView(R.id.hicvp_card) VerticalInfiniteCycleViewPager infiniteCycleViewPager;
 
     public SearchFragment() {}
 
@@ -42,17 +43,17 @@ public class SearchFragment extends Fragment {
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
+        ButterKnife.bind(this, view);
+
+        return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-//        ViewPagerAdapter
-        infiniteCycleViewPager = (VerticalInfiniteCycleViewPager) getView().findViewById(R.id.hicvp);
         infiniteCycleViewPager.setAdapter(new HorizontalCardAdapter(getContext(), mListener));
-
     }
 
     @Override

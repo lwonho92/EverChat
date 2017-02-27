@@ -2,7 +2,10 @@
     <string name="app_name">EverChat</string>
     <string name="title_activity_settings">Settings</string>
 
+    <string name="welcome_message"> Welcome EverChat! </string>
+    <string name="signin_message">Enjoy chat with foreigner.</string>
     <string name="progress_message">Load User\'s info</string>
+    <string name="chat_send_message">SEND</string>
 
     <!--Each tabs name-->
     <string name="room">Country</string>
@@ -67,6 +70,9 @@
     <!--Font style-->
     <string name="font_style">fonts/NanumBarunGothicBold.ttf</string>
 
+    <!--MainActivity menu title-->
+    <string name="main_signout">Log Out</string>
+
     <!--SettingsActivity menu title-->
     <string name="settings_save">Save</string>
     <string name="settings_cancel">Cancel</string>
@@ -74,5 +80,4 @@
     <!--More Fragment text-->
     <string name="more_settings_button">Settings</string>
     <string name="more_copyright_button">Copy Rights</string>
-
 </resources>

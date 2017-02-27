@@ -11,7 +11,7 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/im_photo"
+            android:id="@+id/im_message_photo"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:visibility="gone"
@@ -22,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:gravity="center_vertical"
             android:orientation="vertical">
             <TextView
@@ -43,7 +44,7 @@
                 android:visibility="gone" />
 
             <ImageButton
-                android:id="@+id/ib_picture"
+                android:id="@+id/ib_send_picture"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_weight="0"

@@ -17,22 +17,10 @@ import java.util.Calendar;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-/**
- * Created by GIGAMOLE on 8/18/16.
- */
 public class Utils {
-    /*public static int getGmtMinutesOffset() {
-        Calendar mCalendar = new GregorianCalendar();
-        TimeZone mTimeZone = mCalendar.getTimeZone();
-        int mGMTOffset = mTimeZone.getRawOffset();
-
-        return (int)(TimeUnit.MINUTES.convert(mGMTOffset, TimeUnit.MILLISECONDS));
-    }*/
-
     public static String getMillisToStr(Long millis) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(millis);
-//        cal.add(Calendar.MINUTE, getGmtMinutesOffset());
 
         String ampm = "";
         switch(cal.get(Calendar.AM_PM)) {
@@ -47,7 +35,6 @@ public class Utils {
     }
 
     public static Uri convertSourceMessageToUri(String sourceMessage, String sourceLanguage, String targetLanguage) {
-
         Uri.Builder builder = new Uri.Builder()
                 .scheme("https")
                 .authority("translate.google.com")

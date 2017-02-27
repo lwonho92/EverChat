@@ -13,9 +13,6 @@ import com.bumptech.glide.Glide;
 import com.lwonho92.everchat.R;
 import com.lwonho92.everchat.fragments.SearchFragment;
 
-/**
- * Created by GIGAMOLE on 7/27/16.
- */
 public class HorizontalCardAdapter extends PagerAdapter {
     private Context mContext;
     private LayoutInflater mLayoutInflater;
@@ -71,9 +68,9 @@ public class HorizontalCardAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
-    public void setupItem(final View view, int position) {
-        ImageView flag = (ImageView) view.findViewById(R.id.im_card_view);
-        TextView text = (TextView) view.findViewById(R.id.tv_card_view);
+    private void setupItem(final View view, int position) {
+        ImageView flag = (ImageView) view.findViewById(R.id.im_search_country_card);
+        TextView text = (TextView) view.findViewById(R.id.tv_search_country_card);
 
         Glide.with(mContext)
                 .load(drawables.getResourceId(position, -1))

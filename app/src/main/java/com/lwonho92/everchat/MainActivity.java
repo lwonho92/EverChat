@@ -39,23 +39,24 @@ import com.lwonho92.everchat.fragments.RoomFragment;
 import com.lwonho92.everchat.fragments.SearchFragment;
 import com.lwonho92.everchat.fragments.MoreFragment;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity implements SearchFragment.SelectCountryListener, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "MainActivity";
-
-    private Toolbar toolbar;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private ProgressDialog progress;
 
     private GoogleApiClient googleApiClient;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
 
+    private ProgressDialog progress;
     public ViewPagerAdapter adapter;
+
+    @BindView(R.id.tb_main) Toolbar toolbar;
+    @BindView(R.id.viewpager) ViewPager viewPager;
+    @BindView(R.id.tabs) TabLayout tabLayout;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         Utils.setCalligraphyConfig(this);
 
@@ -81,18 +83,15 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
             }
         });
 
-        toolbar = (Toolbar) findViewById(R.id.tb_main);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
@@ -217,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.Se
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch(itemId) {
-            case R.id.action_signout:
+            case R.id.action_logout:
                 firebaseAuth.signOut();
                 Auth.GoogleSignInApi.signOut(googleApiClient);
                 startActivity(new Intent(this, SignInActivity.class));

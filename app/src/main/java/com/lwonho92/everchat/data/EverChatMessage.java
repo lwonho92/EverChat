@@ -31,8 +31,7 @@ public class EverChatMessage {
     private String uid;
     private Long timestamp;
 
-    public EverChatMessage() {
-    }
+    public EverChatMessage() { }
 
     public EverChatMessage(String name, String photoUrl, String language, String uid) {
         this.name = name;

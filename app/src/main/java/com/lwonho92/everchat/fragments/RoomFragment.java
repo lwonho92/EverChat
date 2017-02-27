@@ -19,36 +19,42 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.lwonho92.everchat.ChatActivity;
 import com.lwonho92.everchat.R;
 import com.lwonho92.everchat.adapters.RoomAdapter;
 import com.lwonho92.everchat.data.EverChatRoom;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Created by MY on 2017-02-14.
  */
 
-public class RoomFragment extends Fragment implements View.OnClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public class RoomFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "RoomFragment";
 
-    private ImageView roomFragmentImageView;
-    private FloatingActionsMenu famButton;
-    private FloatingActionButton fabHomeland, fabCreateRoom;
+    private LinearLayoutManager linearLayoutManager;
+    private DatabaseReference databaseReference;
+    private RoomAdapter firebaseRecyclerAdapter;
+
     private String home;
     private String currentCountry;
 
-    private RecyclerView recyclerView;
-    private LinearLayoutManager linearLayoutManager;
-
-    private DatabaseReference databaseReference;
-    private RoomAdapter firebaseRecyclerAdapter;
+    @BindView(R.id.im_room_list_label) ImageView roomFragmentImageView;
+    @BindView(R.id.fam_button) FloatingActionsMenu famButton;
+    @BindView(R.id.rv_room_list) RecyclerView recyclerView;
 
     public RoomFragment() {}
     @Override
@@ -60,26 +66,19 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_room, container, false);
+        View view = inflater.inflate(R.layout.fragment_room, container, false);
+        ButterKnife.bind(this, view);
+
+        return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        roomFragmentImageView = (ImageView) getView().findViewById(R.id.im_room_fragment);
-
-        famButton = (FloatingActionsMenu) getView().findViewById(R.id.fam_button);
-        fabHomeland = (FloatingActionButton) getView().findViewById(R.id.fab_homeland);
-        fabCreateRoom = (FloatingActionButton) getView().findViewById(R.id.fab_create_room);
-        fabHomeland.setOnClickListener(this);
-        fabCreateRoom.setOnClickListener(this);
-
         databaseReference = FirebaseDatabase.getInstance().getReference("room_names");
 
-        recyclerView = (RecyclerView) getView().findViewById(R.id.rv_room);
         linearLayoutManager = new LinearLayoutManager(getContext());
-
         firebaseRecyclerAdapter = new RoomAdapter(getContext(),
                 EverChatRoom.class,
                 R.layout.item_room,
@@ -100,6 +99,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
                 }
             }
         });
+
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(firebaseRecyclerAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
@@ -189,7 +189,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
         recyclerView.swapAdapter(firebaseRecyclerAdapter, true);
     }
 
-    @Override
+    @OnClick({R.id.fab_create_room, R.id.fab_homeland})
     public void onClick(View v) {
         int id = v.getId();
         famButton.collapse();
@@ -211,7 +211,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Shar
                         {
                             String roomId = databaseReference.child(currentCountry).push().getKey();
                             String roomName = roomNameEditText.getText().toString();
-                            databaseReference.child(currentCountry).child(roomId).setValue(new EverChatRoom(roomName.substring(0, 10) + " ...", "", home));
+                            databaseReference.child(currentCountry).child(roomId).setValue(new EverChatRoom(roomName, "", home));
 
                             Intent intent = new Intent(getContext(), ChatActivity.class);
                             intent.putExtra(getString(R.string.room_id), roomId);

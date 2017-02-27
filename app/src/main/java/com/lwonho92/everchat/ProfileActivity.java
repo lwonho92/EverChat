@@ -25,22 +25,30 @@ import com.lwonho92.everchat.data.Utils;
 
 import java.util.HashMap;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
-
-    private Toolbar toolbar;
 
     private String selectedUid;
     private String myUid;
 
-    ImageView pictureImageView;
-    TextView countryTextView, languageTextView, emailTextView, infoTextView;
-    ToggleButton startToggleButton;
+    private DatabaseReference selectedStarsRef;
 
-    DatabaseReference selectedStarsRef;
+    @BindView(R.id.tb_profile) Toolbar toolbar;
+    @BindView(R.id.im_profile_photo) ImageView pictureImageView;
+    @BindView(R.id.tv_profile_country) TextView countryTextView;
+    @BindView(R.id.tv_profile_language) TextView languageTextView;
+    @BindView(R.id.tv_profile_email) TextView emailTextView;
+    @BindView(R.id.tv_profile_info) TextView infoTextView;
+    @BindView(R.id.tb_profile_heart) ToggleButton startToggleButton;
+    @OnClick(R.id.tb_profile_heart)
+    public void onClick() {
+        updateStars();
+    }
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -51,24 +59,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        ButterKnife.bind(this);
+
         Utils.setCalligraphyConfig(this);
 
-        toolbar = (Toolbar) findViewById(R.id.tb_profile);
         setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         Intent intent = getIntent();
         if(intent != null) {
             selectedUid = intent.getStringExtra(getString(R.string.profile_selected_uid));
         }
         myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        pictureImageView = (ImageView) findViewById(R.id.im_profile);
-        countryTextView = (TextView) findViewById(R.id.tv_profile_country);
-        languageTextView = (TextView) findViewById(R.id.tv_profile_language);
-        emailTextView = (TextView) findViewById(R.id.tv_profile_email);
-        infoTextView = (TextView) findViewById(R.id.tv_profile_info);
-        startToggleButton = (ToggleButton) findViewById(R.id.tb_profile_stars);
 
         final DatabaseReference myStarsRef = FirebaseDatabase.getInstance().getReference("auth").child(myUid).child("stars");
         myStarsRef.addValueEventListener(new ValueEventListener() {
@@ -124,18 +125,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 Log.e(TAG, getString(R.string.firebase_single_value_error) + " : " + databaseError.toString());
             }
         });
-        startToggleButton.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        int viewId = v.getId();
-
-        switch(viewId) {
-            case R.id.tb_profile_stars:
-                updateStars();
-                break;
-        }
     }
 
     private void updateStars() {

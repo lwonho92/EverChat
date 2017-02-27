@@ -2,12 +2,9 @@ package com.lwonho92.everchat;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -21,19 +18,12 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,21 +53,21 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class ChatActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, PermissionListener {
+public class ChatActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, PermissionListener {
     private static final String TAG = "ChatActivity";
     private static final int INTENT_REQUEST_GET_IMAGES = 13;
 
-    private Toolbar toolbar;
+    //    Firebase instance variables
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
 
-    private Button sendButton;
-    private ImageButton pictureImageButton, translateImageButton;
-    private EditText editText;
-
-    private RecyclerView recyclerView;
-    private LinearLayoutManager linearLayoutManager;
+    private DatabaseReference databaseReference;
+    private ChatAdapter firebaseRecyclerAdapter;
 
     private String mUsername;
     private String mPhotoUrl;
@@ -87,12 +77,13 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
     private String roomName = "";
     private String prefLanguage = "";
 
-//    Firebase instance variables
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
+    LinearLayoutManager linearLayoutManager;
 
-    private DatabaseReference databaseReference;
-    private ChatAdapter firebaseRecyclerAdapter;
+    @BindView(R.id.tb_chat) Toolbar toolbar;
+    @BindView(R.id.bt_send) Button sendButton;
+    @BindView(R.id.ib_translate) ImageButton translateImageButton;
+    @BindView(R.id.et_message) EditText editText;
+    @BindView(R.id.messageRecyclerView) RecyclerView recyclerView;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -103,10 +94,10 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        ButterKnife.bind(this);
 
         Utils.setCalligraphyConfig(this);
 
-        toolbar = (Toolbar) findViewById(R.id.tb_chat);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -124,12 +115,8 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
         mUsername = firebaseUser.getDisplayName();
         mPhotoUrl = firebaseUser.getPhotoUrl().toString();
 
-        translateImageButton = (ImageButton) findViewById(R.id.ib_translate);
-        sendButton = (Button) findViewById(R.id.send_button);
-        pictureImageButton = (ImageButton) findViewById(R.id.ib_picture);
-        editText = (EditText) findViewById(R.id.messageEditText);
 
-        recyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView);
+
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
 
@@ -196,15 +183,12 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
             }
         });
 
-        translateImageButton.setOnClickListener(this);
         boolean isOnTranslate = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_translate), getResources().getBoolean(R.bool.pref_default_translate));
         if(isOnTranslate) {
             visiableTranslation();
         } else {
             invisiableTranslation();
         }
-        sendButton.setOnClickListener(this);
-        pictureImageButton.setOnClickListener(this);
 
         databaseReference.child("room_names").child(roomCountry).child(roomId).addChildEventListener(new ChildEventListener() {
             @Override
@@ -303,10 +287,10 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
                                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
 //                                    Save gs://<bucket>/picture/<roomId>/<messageId>/<file_name>
                                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                    Log.e(TAG, "Upload Success: " + downloadUrl.toString());
 
                                     EverChatMessage everChatMessage = new EverChatMessage(mUsername, mPhotoUrl, prefLanguage, FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                    everChatMessage.setPicture(downloadUrl.toString());
+                                    if(downloadUrl != null)
+                                        everChatMessage.setPicture(downloadUrl.toString());
                                     Map<String, Object> postValues = everChatMessage.toMap();
 
                                     Map<String, Object> childUpdates = new HashMap<>();
@@ -329,14 +313,14 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key == getString(R.string.pref_language)) {
+        if(key.equals(getString(R.string.pref_language))) {
             prefLanguage = sharedPreferences.getString(key, getString(R.string.pref_default_language));
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        int selectedId = v.getId();
+    @OnClick({R.id.ib_translate, R.id.ib_send_picture, R.id.bt_send})
+    public void onClick(View view) {
+        int selectedId = view.getId();
 
         switch(selectedId) {
             case R.id.ib_translate:
@@ -356,14 +340,14 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
 //                recyclerView.swapAdapter(firebaseRecyclerAdapter, true);
 
                 break;
-            case R.id.ib_picture:
+            case R.id.ib_send_picture:
                 new TedPermission(this)
                         .setPermissionListener(this)
                         .setDeniedMessage(getString(R.string.permission_deny_guide))
                         .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                         .check();
                 break;
-            case R.id.send_button:
+            case R.id.bt_send:
                 databaseReference.child("room_names").child(roomCountry).child(roomId).child("timestamp").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

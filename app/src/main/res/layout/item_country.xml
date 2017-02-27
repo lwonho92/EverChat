@@ -23,13 +23,13 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/im_card_view"
+                    android:id="@+id/im_search_country_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:src="@drawable/flag_kr"/>
 
                 <TextView
-                    android:id="@+id/tv_card_view"
+                    android:id="@+id/tv_search_country_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#005fb0"
