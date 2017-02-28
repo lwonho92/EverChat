@@ -221,7 +221,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<EverChatMessage, ChatAd
             return "";
         }
 
-        @OnClick(R.id.ib_send_picture)
+        @OnClick(R.id.im_message_photo)
         public void onClick() {
             Intent intent = new Intent(mContext, ProfileActivity.class);
             intent.putExtra(mContext.getString(R.string.profile_selected_uid), uid);

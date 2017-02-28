@@ -39,6 +39,7 @@
                 android:layout_weight="0"
                 android:padding="10dp"
                 android:autoLink="web"
+                android:maxWidth="200dp"
                 android:background="@xml/rounded_message"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:visibility="gone" />

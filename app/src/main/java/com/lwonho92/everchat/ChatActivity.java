@@ -163,7 +163,7 @@ public class ChatActivity extends AppCompatActivity implements SharedPreferences
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(firebaseRecyclerAdapter);
 
-        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(40)});
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
