@@ -1,3 +1,13 @@
+# Built application files
+*.apk
+*.ap_
+
+# Keystore files
+*.jks
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
 *.iml
 .gradle
 /local.properties

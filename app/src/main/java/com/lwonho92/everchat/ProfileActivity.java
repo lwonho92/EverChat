@@ -106,7 +106,7 @@ public class ProfileActivity extends AppCompatActivity {
                         .into(pictureImageView);
                 countryTextView.setText(everChatProfile.getCountry());
                 languageTextView.setText(everChatProfile.getLanguage());
-                emailTextView.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                emailTextView.setText(everChatProfile.getEmail());
                 infoTextView.setText(everChatProfile.getInfo());
 
                 HashMap<String, Boolean> stars = everChatProfile.getStars();

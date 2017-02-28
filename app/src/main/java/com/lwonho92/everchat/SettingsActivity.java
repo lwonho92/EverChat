@@ -204,6 +204,7 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
                         everChatProfile.setUserName(firebaseUser.getDisplayName());
                         everChatProfile.setCountry(countrySpinner.getSelectedItem().toString());
                         everChatProfile.setLanguage(languageSpinner.getSelectedItem().toString());
+                        everChatProfile.setEmail(firebaseAuth.getCurrentUser().getEmail());
                         everChatProfile.setInfo(profileEditText.getText().toString());
                         databaseReference.setValue(everChatProfile);
                     }

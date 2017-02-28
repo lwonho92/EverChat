@@ -15,8 +15,8 @@ public class EverChatProfile {
     private String userName;
     private String photoUrl;
     private String country;
-
     private String language;
+    private String email;
     private String info;
     private HashMap<String, Boolean> stars;
 
@@ -64,6 +64,14 @@ public class EverChatProfile {
         this.language = language;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getInfo() {
         return info;
     }
@@ -89,6 +97,7 @@ public class EverChatProfile {
         result.put("photo", photoUrl);
         result.put("country", country);
         result.put("language", language);
+        result.put("email", email);
         result.put("info", info);
         result.put("stars", stars);
         return result;
