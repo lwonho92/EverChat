@@ -56,12 +56,12 @@ public class MoreFragment extends Fragment {
                 startActivity(licenseIntent);
                 break;
             case R.id.bt_gmail:
-                Uri contactUri = Uri.parse("mailto:lwonho92@bt_gmail.com");
+                Uri contactUri = Uri.parse("mailto:lwonho92@gmail.com");
                 Intent contactIntent = new Intent(Intent.ACTION_SENDTO, contactUri);
                 startActivity(contactIntent);
                 break;
             case R.id.bt_github:
-                Uri githubUri = Uri.parse("http://bt_github.com/lwonho92");
+                Uri githubUri = Uri.parse("http://github.com/lwonho92");
                 Intent githubIntent = new Intent(Intent.ACTION_VIEW, githubUri);
                 startActivity(githubIntent);
                 break;

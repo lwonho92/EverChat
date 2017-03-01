@@ -49,10 +49,7 @@
                     android:layout_gravity="bottom|end"
                     android:textOn=""
                     android:textOff=""
-                    android:background="@xml/toggle_background"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="20dp" />
+                    android:background="@xml/toggle_background" />
             </FrameLayout>
 
             <TextView
