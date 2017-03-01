@@ -32,5 +32,5 @@
             app:icvp_medium_scaled="true"
             app:icvp_min_page_scale="0.5"
             app:icvp_min_page_scale_offset="5dp"
-            app:icvp_scroll_duration="200"/>
+            app:icvp_scroll_duration="400"/>
 </RelativeLayout>

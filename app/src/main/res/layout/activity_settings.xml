@@ -24,72 +24,83 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
             android:orientation="vertical">
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:background="@xml/profile_picture_gradient" >
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/im_settings_photo"
                     android:layout_width="match_parent"
                     android:layout_height="280dp"
-                    android:src="@drawable/ic_account_circle_black_36dp"/>
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="@color/navigationBarColor" />
                 <ImageButton
                     android:id="@+id/bt_settings_picture"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
                     android:src="@drawable/ic_action_picture"
-                    android:background="@color/colorAccent" />
+                    android:background="@color/colorChatBoardDark" />
             </FrameLayout>
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/profile_label_bottom_margin"
-                android:text="@string/profile_country"
-                android:textSize="@dimen/profile_label_size" />
-            <Spinner
-                android:id="@+id/sp_settings_country"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/profile_data_bottom_margin"
-                android:entries="@array/short_countries"
-                android:enabled="false"
-                android:clickable="false"
-                android:textSize="@dimen/profile_data_size" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/profile_label_bottom_margin"
-                android:text="@string/profile_language"
-                android:textSize="@dimen/profile_label_size" />
-            <Spinner
-                android:id="@+id/sp_settings_language"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/profile_data_bottom_margin"
-                android:entries="@array/short_languages"
-                android:textSize="@dimen/profile_data_size" />
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:orientation="vertical" >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/profile_label_bottom_margin"
+                    android:text="@string/profile_country"
+                    android:textSize="@dimen/profile_label_size" />
+                <Spinner
+                    android:id="@+id/sp_settings_country"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/profile_data_bottom_margin"
+                    android:entries="@array/short_countries"
+                    android:enabled="false"
+                    android:clickable="false"
+                    android:textSize="@dimen/profile_data_size" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/profile_label_bottom_margin"
+                    android:text="@string/profile_language"
+                    android:textSize="@dimen/profile_label_size" />
+                <Spinner
+                    android:id="@+id/sp_settings_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/profile_data_bottom_margin"
+                    android:entries="@array/short_languages"
+                    android:textSize="@dimen/profile_data_size" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/profile_label_bottom_margin"
-                android:text="@string/profile_info"
-                android:textSize="@dimen/profile_label_size" />
-            <EditText
-                android:id="@+id/et_settings_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/profile_data_bottom_margin"
-                android:textSize="@dimen/profile_data_size" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/profile_label_bottom_margin"
+                    android:text="@string/profile_info"
+                    android:textSize="@dimen/profile_label_size" />
+                <EditText
+                    android:id="@+id/et_settings_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/profile_data_bottom_margin"
+                    android:textSize="@dimen/profile_data_size" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

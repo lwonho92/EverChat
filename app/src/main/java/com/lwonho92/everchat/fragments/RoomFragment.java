@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,16 +20,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.lwonho92.everchat.ChatActivity;
 import com.lwonho92.everchat.R;
 import com.lwonho92.everchat.adapters.RoomAdapter;
@@ -37,6 +33,7 @@ import com.lwonho92.everchat.data.EverChatRoom;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by MY on 2017-02-14.
@@ -125,6 +122,7 @@ public class RoomFragment extends Fragment implements SharedPreferences.OnShared
         Glide.with(getContext())
                 .load(drawables.getResourceId(i, -1))
                 .centerCrop()
+                .bitmapTransform(new RoundedCornersTransformation(getContext(), 100, 0))
                 .into(roomFragmentImageView);
 
         drawables.recycle();
@@ -156,10 +154,10 @@ public class RoomFragment extends Fragment implements SharedPreferences.OnShared
         Glide.with(getContext())
                 .load(drawables.getResourceId(i, -1))
                 .centerCrop()
+                .bitmapTransform(new RoundedCornersTransformation(getContext(), 100, 0))
                 .into(roomFragmentImageView);
 
         drawables.recycle();
-//        roomFragmentImageView.setText(currentCountry);
 
         if(firebaseRecyclerAdapter != null)
             firebaseRecyclerAdapter.cleanup();
@@ -197,6 +195,7 @@ public class RoomFragment extends Fragment implements SharedPreferences.OnShared
             case R.id.fab_create_room:
 //                Toast.makeText(getContext(), "fab_create_room clicked", Toast.LENGTH_LONG).show();
                 final EditText roomNameEditText = new EditText(getContext());
+                roomNameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT);

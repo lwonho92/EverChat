@@ -97,7 +97,8 @@
                 android:layout_alignParentEnd="true"
                 android:enabled="false"
                 android:text="@string/chat_send_message"
-                android:background="@color/colorAccent" />
+                android:backgroundTint="@color/colorAccentLight"
+                android:background="@xml/rounded_message" />
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

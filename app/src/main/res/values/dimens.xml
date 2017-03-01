@@ -11,11 +11,11 @@
     <dimen name="custom_tab_layout_height">72dp</dimen>
 
     <dimen name="profile_label_size">28sp</dimen>
-    <dimen name="profile_data_size">28sp</dimen>
+    <dimen name="profile_data_size">20sp</dimen>
     <dimen name="profile_label_bottom_margin">10dp</dimen>
     <dimen name="profile_data_bottom_margin">20dp</dimen>
 
-    <dimen name="more_fragment_icon">128dp</dimen>
+    <dimen name="license_text_size">16sp</dimen>
 
-    <dimen name="license_text_size">24sp</dimen>
+    <dimen name="more_fragment_icon">128dp</dimen>
 </resources>

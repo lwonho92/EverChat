@@ -46,7 +46,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
-        <activity android:name=".ProfileActivity"/>
+        <activity
+            android:name=".ProfileActivity"
+            android:label="Profile" >
+
+        </activity>
         <activity
             android:name=".LicenseActivity"
             android:label="Opensource Licenses"

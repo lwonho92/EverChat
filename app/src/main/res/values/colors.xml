@@ -10,8 +10,6 @@
     <color name="colorAccentLight">#FF80AB</color>
 
     <!--For chat layout-->
-    <color name="colorChatBoardLight">#FFF176</color>
-    <color name="colorChatBoard">#FFEB3B</color>
     <color name="colorChatBoardDark">#FBC02D</color>
 
     <!--For Fab-->

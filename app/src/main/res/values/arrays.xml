@@ -33,14 +33,15 @@
     </integer-array>
 
     <string-array name="opensource_licenses">
+        <item>glide - Apache 2.0 (https://github.com/bumptech/glide/blob/master/LICENSE)</item>
         <item>devlight_infinitecyclerviewPager - Apache 2.0</item>
+        <item>wasabeef_glide_transformations - Apache 2.0</item>
         <item>getbase_floatingactionbutton - Apache 2.0</item>
+        <item>chrisjenx_calligraphy - Apache 2.0</item>
         <item>gun0912_ted_tedpermission - Apache 2.0</item>
         <item>parksanggwon_tedpicker - Apache 2.0</item>
-        <item>medyo_FancyButton - MIT</item>
-        <item>calligraphy - Apache 2.0</item>
         <item>butterKnife - Apache 2.0</item>
+        <item>medyo_FancyButton - MIT</item>
         <item>hdodenhof - Apache 2.0</item>
-        <item>glide - Apache 2.0 (https://github.com/bumptech/glide/blob/master/LICENSE)</item>
     </string-array>
 </resources>
