@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lwonho92.everchat.adapters.LicenseAdapter;
 import com.lwonho92.everchat.data.Utils;
@@ -18,7 +16,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LicenseActivity extends AppCompatActivity {
     private Toolbar toolbar;
-    private RecyclerView recyclerView;
+    @BindView(R.id.recyclerview_license) RecyclerView recyclerView;
     private LicenseAdapter licenseAdapter;
 
     @Override

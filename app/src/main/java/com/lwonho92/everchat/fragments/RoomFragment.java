@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -33,7 +34,7 @@ import com.lwonho92.everchat.data.EverChatRoom;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import jp.wasabeef.glide.transformations.gpu.SketchFilterTransformation;
 
 /**
  * Created by MY on 2017-02-14.
@@ -121,8 +122,7 @@ public class RoomFragment extends Fragment implements SharedPreferences.OnShared
         TypedArray drawables = getResources().obtainTypedArray(R.array.drawable_countries);
         Glide.with(getContext())
                 .load(drawables.getResourceId(i, -1))
-                .centerCrop()
-                .bitmapTransform(new RoundedCornersTransformation(getContext(), 100, 0))
+                .bitmapTransform(new CenterCrop(getContext()), new SketchFilterTransformation(getContext()))
                 .into(roomFragmentImageView);
 
         drawables.recycle();
@@ -153,8 +153,7 @@ public class RoomFragment extends Fragment implements SharedPreferences.OnShared
         TypedArray drawables = getResources().obtainTypedArray(R.array.drawable_countries);
         Glide.with(getContext())
                 .load(drawables.getResourceId(i, -1))
-                .centerCrop()
-                .bitmapTransform(new RoundedCornersTransformation(getContext(), 100, 0))
+                .bitmapTransform(new CenterCrop(getContext()), new SketchFilterTransformation(getContext()))
                 .into(roomFragmentImageView);
 
         drawables.recycle();

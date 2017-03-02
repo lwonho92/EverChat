@@ -1,18 +1,10 @@
 package com.lwonho92.everchat.data;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 
-import com.gun0912.tedpicker.Config;
-import com.gun0912.tedpicker.ImagePickerActivity;
 import com.lwonho92.everchat.R;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.Calendar;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;

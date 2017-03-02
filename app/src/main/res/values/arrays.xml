@@ -33,7 +33,7 @@
     </integer-array>
 
     <string-array name="opensource_licenses">
-        <item>glide - Apache 2.0 (https://github.com/bumptech/glide/blob/master/LICENSE)</item>
+        <item>glide - Apache 2.0 ( https://github.com/bumptech/glide/blob/master/LICENSE )</item>
         <item>devlight_infinitecyclerviewPager - Apache 2.0</item>
         <item>wasabeef_glide_transformations - Apache 2.0</item>
         <item>getbase_floatingactionbutton - Apache 2.0</item>
